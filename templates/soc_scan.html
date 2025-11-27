@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeFile SOC Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_scan.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="left">
+      <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
+      <nav class="nav-links">
+        <a href="{{ url_for('soc.soc_home') }}">Home</a>
+        <a href="{{ url_for('soc.soc_scan') }}" class="active">Scan</a>
+        <a href="{{ url_for('soc.soc_history') }}">History</a>
+        <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
+      </nav>
+    </div>
+
+       <div class="Logo">
+        <div class="logo-combo">
+            <img src="{{ url_for('static', filename='img/small_logo.png') }}" alt="SafeFile icon" class="icon">
+             <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
+         </div>
+        </div>
+  </header>
+
+<main class="content scan-page">
+  
+
+<div class="upload-container">
+  <h2>Upload Files for Scanning</h2>
+<div class="upload-actions">
+
+        <!-- FILE UPLOAD BUTTON -->
+        <form method="POST" enctype="multipart/form-data" id="fileForm">
+         <label class="upload-btn file-btn">
+          <input type="file" name="single_files" multiple hidden onchange="document.getElementById('fileForm').submit();">
+            <svg class="btn-icon" viewBox="0 0 24 24">
+             <path d="M12 3v12m0-12l-4 4m4-4l4 4M5 21h14a2 2 0 0 0 2-2v-5H3v5a2 2 0 0 0 2 2z"
+              stroke="#5924d0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+               Upload File
+          </label>
+        </form>
+
+        <!-- FOLDER UPLOAD BUTTON -->
+        <form method="POST" enctype="multipart/form-data" id="folderForm">
+         <label class="upload-btn folder-btn">
+          <input type="file" name="folder_files" webkitdirectory hidden onchange="document.getElementById('folderForm').submit();">
+            <svg class="btn-icon" viewBox="0 0 24 24">
+             <path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="#5924d0" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+               Upload Folder
+         </label>
+        </form>
+      </div>
+    </div>
+
+    <!-- FILE MESSAGE -->
+    {% if file_message %}
+      <div class="result-message">
+        {{ file_message }}
+      </div>
+    {% endif %}
+
+
+
+
+        {% if uploaded_files and not analysis_results %}
+      <div class="folder-results">
+        <h3>Files to Scan</h3>
+
+        <table>
+          <tr>
+            <th>File Name</th>
+          </tr>
+          {% for f in uploaded_files %}
+          <tr>
+            <td>{{ f.display_name }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+
+        <!-- Scan button form -->
+        <form method="POST" class="scan-form">
+          {# send saved filenames back to the server #}
+          {% for f in uploaded_files %}
+            <input type="hidden" name="files_to_scan" value="{{ f.saved_name }}">
+          {% endfor %}
+          <button type="submit"
+                  name="action"
+                  value="scan"
+                  class="upload-btn file-btn">
+            Scan Files
+          </button>
+        </form>
+      </div>
+    {% endif %}
+
+
+    
+
+{% if analysis_results %}
+  <div class="scan-results">
+    <h3>Scan Results</h3>
+
+    {# Header row for the summary table #}
+    <div class="scan-header">
+      <span class="col-file">File Name</span>
+      <span class="col-type">File Type</span>
+      <span class="col-verdict">Final Verdict</span>
+    </div>
+
+    {# One expandable card per file #}
+    {% for r in analysis_results %}
+      <details class="file-card">
+        <summary class="file-summary-row">
+          <div class="file-main">
+            <span class="arrow"></span>
+            <span class="file-name">{{ r.display_name }}</span>
+          </div>
+          
+          <span class="file-type">{{ r.final_type or "Unknown" }}</span>
+          <!-- placeholder for future verdict -->
+          <span class="badge badge-neutral">-</span>
+        </summary>
+
+        <div class="file-details">
+
+          <!-- 1) File Type Detection -->
+          <div class="detail-section">
+            <h4>File Type Detection</h4>
+            <ul class="kv-list">
+              <li>
+                <span class="kv-label">Declared Extension</span>
+                <span class="kv-value">{{ r.declared_extension or "-" }}</span>
+              </li>
+              <li>
+                <span class="kv-label">Magic Type</span>
+                <span class="kv-value">{{ r.magic_type or "-" }}</span>
+              </li>
+              <li>
+                <span class="kv-label">Detected Type</span>
+                <span class="kv-value">{{ r.final_type or "Unknown" }}</span>
+              </li>
+              <li>
+                <span class="kv-label">Detected MIME</span>
+                <span class="kv-value">{{ r.final_mime or "-" }}</span>
+              </li>
+              <li>
+                <span class="kv-label">Extension / Type Mismatch</span>
+                <span class="kv-value">
+                  {% if r.mismatch %}
+                    <span class="badge badge-bad">Mismatch</span>
+                  {% else %}
+                    <span class="badge badge-good">OK</span>
+                  {% endif %}
+                </span>
+              </li>
+            </ul>
+          </div>
+
+
+          {# 2) Entropy Analysis – REAL data from analysis["entropy"] #}
+{% set e = r.entropy %}
+{% if e %}
+  {% set overall = e.overall_entropy %}
+  {% if overall is not none %}
+
+    {# classify overall entropy #}
+    {% if overall < 5 %}
+      {% set entropy_label = "Low" %}
+      {% set entropy_class = "entropy-low" %}
+    {% elif overall < 7 %}
+      {% set entropy_label = "Normal" %}
+      {% set entropy_class = "entropy-normal" %}
+    {% elif overall < 7.8 %}
+      {% set entropy_label = "High" %}
+      {% set entropy_class = "entropy-high" %}
+    {% else %}
+      {% set entropy_label = "Very High" %}
+      {% set entropy_class = "entropy-very-high" %}
+    {% endif %}
+
+    {% set pe = e.pe_report %}
+    {% set interp = e.pe_interpretation %}
+
+    <div class="detail-section entropy-card">
+      <div class="entropy-top-row">
+        <div class="entropy-overall">
+          <h4>Entropy Analysis</h4>
+          <ul class="kv-list">
+            <li>
+              <span class="kv-label">Overall Shannon Entropy</span>
+              <span class="kv-value">
+                <span class="pill entropy-pill {{ entropy_class }}">
+                  {{ "%.2f"|format(overall) }} / 8.00
+                </span>
+                <span class="entropy-text">{{ entropy_label }}</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {% if interp %}
+        <div class="entropy-risk">
+          <div class="kv-label">PE Entropy Risk Score</div>
+          <div class="entropy-risk-score">
+            {{ interp.risk_score }}/100
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if pe and pe.is_pe %}
+      <div class="entropy-grid">
+        {% if pe.sections %}
+        <div class="entropy-col">
+          <h5 class="entropy-subtitle">Section Entropy</h5>
+          <table class="detail-table entropy-section-table">
+            <tr>
+              <th style="text-align:left;">Section</th>
+              <th style="text-align:left;">Entropy</th>
+              <th style="text-align:left;">Comment</th>
+            </tr>
+            {% for sec in pe.sections %}
+            <tr>
+              <td>{{ sec.name }}</td>
+              <td>{{ "%.2f"|format(sec.entropy) if sec.entropy is not none else "-" }}</td>
+              <td>{{ sec.comment if sec.comment is defined else "-" }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+        {% endif %}
+
+        {% if interp %}
+        <div class="entropy-col">
+          <h5 class="entropy-subtitle">PE Interpretation</h5>
+
+          {% if interp.flags %}
+            <ul class="flag-list">
+              {% for flag in interp.flags %}
+                <li>{{ flag }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          {% if interp.notes %}
+            <ul class="flag-list">
+              {% for note in interp.notes %}
+                <li>{{ note }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endif %}
+
+
+
+
+
+          <!-- 3) YARA  results -->
+          <div class="detail-section">
+            <h4>YARA Rule Matches</h4>
+
+            {# Safety: if for some reason r.yara is missing #}
+            {% if not r.yara %}
+              <p class="muted-text">
+                No YARA data available for this file.
+              </p>
+
+            {# YARA not enabled (no rules / compile failed) #}
+            {% elif not r.yara.enabled %}
+              <p class="muted-text">
+                YARA scanning is currently disabled (no rules loaded or compilation failed).
+              </p>
+
+            {# YARA enabled but this scan had an error #}
+            {% elif r.yara.error %}
+              <p class="muted-text">
+                An error occurred while scanning this file with YARA:
+              </p>
+              <div class="code-block">
+                {{ r.yara.error }}
+              </div>
+
+            {# We have at least one match #}
+            {% elif r.yara.matches %}
+              <p class="muted-text">
+                The following YARA rule(s) matched this file:
+              </p>
+
+              <div class="table-wrapper">
+                <table class="detail-table">
+                  <thead>
+                    <tr>
+                      <th>Rule Name</th>
+                      <th>Description</th>
+                      <th>Severity</th>
+                      <th>Namespace</th>
+                      <th>Tags</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for m in r.yara.matches %}
+                      <tr>
+                        <td><strong>{{ m.rule }}</strong></td>
+
+                        {# meta.description may not exist #}
+                        <td>
+                          {% if m.meta.description is defined %}
+                            {{ m.meta.description }}
+                          {% else %}
+                            <span class="muted-text">No description</span>
+                          {% endif %}
+                        </td>
+
+                        {# meta.severity may not exist #}
+                        <td>
+                          {% if m.meta.severity is defined %}
+                            {{ m.meta.severity }}
+                          {% else %}
+                            <span class="muted-text">N/A</span>
+                          {% endif %}
+                        </td>
+
+                        <td>{{ m.namespace or "-" }}</td>
+
+                        <td>
+                          {% if m.tags %}
+                            {{ m.tags | join(", ") }}
+                          {% else %}
+                            <span class="muted-text">None</span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+            {# YARA enabled, no error, but no matches #}
+            {% else %}
+              <p class="muted-text">
+                No YARA rules matched this file.
+              </p>
+            {% endif %}
+          </div>
+
+          
+
+          <!-- 4) VirusTotal – placeholder -->
+          <div class="detail-section">
+            <h4>VirusTotal Summary</h4>
+            <p class="muted-text">
+              VirusTotal results will be shown here when integrated.
+            </p>
+          </div>
+
+          <!-- 5) ML Verdict – placeholder -->
+          <div class="detail-section">
+            <h4>ML Verdict</h4>
+            <p class="muted-text">
+              Machine learning verdict and score will be displayed here later.
+            </p>
+          </div>
+
+          <!-- 6) Analyst Notes -->
+          <div class="detail-section">
+            <h4>Analyst Notes</h4>
+            <div class="note-block">
+              (Final analyst notes and combined verdict will appear here.)
+            </div>
+          </div>
+
+        </div>
+      </details>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+
+</main>
+
+{% if error_message %}
+<script>
+Swal.fire({
+  icon: 'error',
+  title: 'Upload Error',
+  html: '{{ error_message }}',
+  confirmButtonColor: '#6d28d9',
+  width: 500
+})
+</script>
+{% endif %}
+
+</body>
+</html>

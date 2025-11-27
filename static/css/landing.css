@@ -1,0 +1,114 @@
+/* ===== color palette ===== */
+:root {
+  --bg: #ebe1fa;
+  --text: #2e2a3b;
+  --accent-start: #a78bfa;
+  --accent-end: #5b21b6;
+}
+
+/* reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  text-align: center;
+}
+
+/* main layout */
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 15px;
+}
+
+.logo {
+  margin-bottom: 10px;
+}
+
+.tagline {
+  color: #4a3f60;
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+/* LOGIN BOX */
+.login-box {
+  width: 400px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* input container */
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #f4f4f4;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.icon-img {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    opacity: 0.85;
+    filter: invert(20%) sepia(96%) saturate(3700%) hue-rotate(266deg) brightness(92%) contrast(104%);
+}
+
+
+/* text boxes */
+.input-group input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  outline: none;
+}
+
+/* button */
+.login-btn {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 14px 0;               
+  width: 350px;                   
+  text-align: center;
+  border: 2px solid #7503C0;
+  border-radius: 999px;
+  background:   #7503C0; 
+  box-shadow: 0 8px 25px rgba(91, 33, 182, 0.3);
+  transition: 0.3s ease;
+  font-size: 15px;
+  cursor:pointer;
+}
+
+.login-btn:hover {
+  background: linear-gradient(90deg, #ff7b4f, #5924d0);
+  border: 2px solid #ff7b4f;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.field-error {
+    background: #ffe6e6;
+    color: #cc0000;
+    border-left: 4px solid #cc0000;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    text-align: left;
+    font-size: 14px;
+}

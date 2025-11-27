@@ -1,0 +1,13 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# App data
+safefile.db
+logs/*
+uploads/*
+.env

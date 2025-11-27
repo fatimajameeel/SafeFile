@@ -1,0 +1,109 @@
+:root {
+  --bg: #faf8ff;
+  --text: #2f2a42;
+  --accent: #6d28d9;
+  --accent-light: #a78bfa;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* top bar container */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* left section (back + nav) */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.back-arrow {
+  text-decoration: none;
+  color: var(--text);
+  font-size: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #555;
+  margin: 0 35px;
+  font-weight: 500;
+  position: relative;
+  transition: color .2s ease;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
+
+/* underline animation */
+.nav-links a.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-light), var(--accent));
+  border-radius: 2px;
+}
+
+/*  logo section */
+.Logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* container for both logo images */
+.logo-combo {
+  display: flex;
+  align-items: center;
+  flex-direction: row;   /* ensure they stay side by side */
+  gap: 4px;              /* space between the icon and text */
+}
+
+/* first image (bug/folder icon) */
+.logo-combo .icon {
+  width: 60px;
+  height: auto;
+}
+
+/* second image (SafeFile text) */
+.logo-combo .logo-text {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+
+
+
+.brand {
+  font-weight: 700;
+  font-size: 20px;
+  background: linear-gradient(90deg, var(--accent-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* main content placeholder */
+.content {
+  padding: 25px;
+}
+
+

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeFile - Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+
+<body>
+  <section class="landing">
+
+    <!-- Logo -->
+    <img
+      class="logo"
+      src="{{ url_for('static', filename='img/Logo.png') }}"
+      alt="SafeFile logo"
+      width="270"
+      height="270"
+    />
+
+    <!-- Tagline -->
+    <p class="tagline">
+      Smart file-scanning dashboard for safer uploads.
+    </p>
+
+   
+    <div class="login-box">
+
+  <form method="POST" action="{{ url_for('auth.login') }}">
+
+    <!-- USERNAME -->
+    <div class="input-group">
+      <img src="{{ url_for('static', filename='img/user.png') }}" class="icon-img">
+      <input type="text" name="username"
+             placeholder="Username"
+             value="{{ entered_username if entered_username else '' }}"
+             required>
+    </div>
+
+    {% if username_error %}
+    <p class="field-error">{{ username_error }}</p>
+    {% endif %}
+
+    <!-- PASSWORD -->
+    <div class="input-group">
+      <img src="{{ url_for('static', filename='img/lock.png') }}" class="icon-img">
+      <input type="password" name="password" placeholder="Password" required>
+    </div>
+
+    {% if password_error %}
+    <p class="field-error">{{ password_error }}</p>
+    {% endif %}
+
+    <button type="submit" class="login-btn">Log In</button>
+
+  </form>
+
+</div>
+
+
+  </section>
+</body>
+</html>
