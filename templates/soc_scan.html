@@ -135,41 +135,52 @@
 
         <div class="file-details">
 
-          <!-- 1) File Type Detection -->
-          <div class="detail-section">
-            <h4>File Type Detection</h4>
-            <ul class="kv-list">
-              <li>
-                <span class="kv-label">Declared Extension</span>
-                <span class="kv-value">{{ r.declared_extension or "-" }}</span>
-              </li>
-              <li>
-                <span class="kv-label">Magic Type</span>
-                <span class="kv-value">{{ r.magic_type or "-" }}</span>
-              </li>
-              <li>
-                <span class="kv-label">Detected Type</span>
-                <span class="kv-value">{{ r.final_type or "Unknown" }}</span>
-              </li>
-              <li>
-                <span class="kv-label">Detected MIME</span>
-                <span class="kv-value">{{ r.final_mime or "-" }}</span>
-              </li>
-              <li>
-                <span class="kv-label">Extension / Type Mismatch</span>
-                <span class="kv-value">
-                  {% if r.mismatch %}
-                    <span class="badge badge-bad">Mismatch</span>
-                  {% else %}
-                    <span class="badge badge-good">OK</span>
-                  {% endif %}
-                </span>
-              </li>
-            </ul>
-          </div>
+          <!-- File Type Detection -->
+<div class="detail-section section-card filetype-card">
+
+  <h4 class="result-title">File Type Detection</h4>
+
+ <table class="ft-table">
+
+    <tr>
+      <td class="result-label">Declared Extension:</td>
+      <td><span class="pill-neutral">{{ r.declared_extension or "-" }}</span></td>
+    </tr>
 
 
-          {# 2) Entropy Analysis – REAL data from analysis["entropy"] #}
+    <tr>
+      <td class="result-label">Magic Type:</td>
+      <td><span class="pill-neutral">{{ r.magic_type or "-" }}</span></td>
+    </tr>
+
+
+    <tr>
+      <td class="result-label">Detected Type:</td>
+      <td><span class="pill-neutral">{{ r.final_type or "Unknown" }}</span></td>
+    </tr>
+
+
+    <tr>
+      <td class="result-label">Detected MIME:</td>
+      <td><span class="pill-neutral">{{ r.final_mime or "-" }}</span></td>
+    </tr>
+
+    <tr>
+      <td class="result-label">Type Mismatch:</td>
+      <td>
+        {% if r.mismatch %}
+          <span class="pill-bad">Mismatch</span>
+        {% else %}
+          <span class="pill-good">No</span>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+  </ul>
+</div>
+
+
+{#---------- 2 Entropy Analysis – TABLE LAYOUT -------------#}
 {% set e = r.entropy %}
 {% if e %}
   {% set overall = e.overall_entropy %}
@@ -193,191 +204,284 @@
     {% set pe = e.pe_report %}
     {% set interp = e.pe_interpretation %}
 
-    <div class="detail-section entropy-card">
-      <div class="entropy-top-row">
-        <div class="entropy-overall">
-          <h4>Entropy Analysis</h4>
-          <ul class="kv-list">
-            <li>
-              <span class="kv-label">Overall Shannon Entropy</span>
-              <span class="kv-value">
-                <span class="pill entropy-pill {{ entropy_class }}">
+    <div class="detail-section section-card entropy-card">
+      <h4 class="result-title">Entropy Analysis</h4>
+
+      {# -------- TOP ROW: OVERALL & RISK SCORE -------- #}
+      <div class="entropy-top-grid">
+        <div class="entropy-meta-card">
+          <table class="kv-table">
+            <tr>
+              <th colspan="2" class="result-label">Overall Shannon Entropy</th>
+            </tr>
+            <tr>
+              <td class="kv-label">Value</td>
+              <td class="kv-value">
+                <span class="pill-entropy {{ entropy_class }}">
                   {{ "%.2f"|format(overall) }} / 8.00
                 </span>
-                <span class="entropy-text">{{ entropy_label }}</span>
-              </span>
-            </li>
-          </ul>
+                <span class="entropy-level-text">{{ entropy_label }}</span>
+              </td>
+            </tr>
+          </table>
         </div>
 
         {% if interp %}
-        <div class="entropy-risk">
-          <div class="kv-label">PE Entropy Risk Score</div>
-          <div class="entropy-risk-score">
-            {{ interp.risk_score }}/100
-          </div>
+        <div class="entropy-meta-card">
+          <table class="kv-table">
+            <tr>
+              <th colspan="2" class="result-label">PE Entropy Risk Score</th>
+            </tr>
+            <tr>
+              <td class="kv-label">Score</td>
+              <td class="kv-value">
+                <span class="pill-entropy-risk">
+                  {{ interp.risk_score }}/100
+                </span>
+              </td>
+            </tr>
+          </table>
         </div>
         {% endif %}
       </div>
 
+      {# -------- BOTTOM ROW: SECTIONS & INTERPRETATION -------- #}
       {% if pe and pe.is_pe %}
-      <div class="entropy-grid">
+      <div class="entropy-bottom-grid">
+
+        {# LEFT: Section entropy table #}
         {% if pe.sections %}
-        <div class="entropy-col">
-          <h5 class="entropy-subtitle">Section Entropy</h5>
+        <div class="entropy-table-wrapper">
+          <h5 class="result-label">PE Section Entropy</h5>
           <table class="detail-table entropy-section-table">
-            <tr>
-              <th style="text-align:left;">Section</th>
-              <th style="text-align:left;">Entropy</th>
-              <th style="text-align:left;">Comment</th>
-            </tr>
-            {% for sec in pe.sections %}
-            <tr>
-              <td>{{ sec.name }}</td>
-              <td>{{ "%.2f"|format(sec.entropy) if sec.entropy is not none else "-" }}</td>
-              <td>{{ sec.comment if sec.comment is defined else "-" }}</td>
-            </tr>
-            {% endfor %}
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>Entropy</th>
+                <th>Comment</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sec in pe.sections %}
+              <tr>
+                <td>{{ sec.name }}</td>
+                <td>{{ "%.2f"|format(sec.entropy) if sec.entropy is not none else "-" }}</td>
+                <td>{{ sec.comment if sec.comment is defined else "-" }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
           </table>
         </div>
         {% endif %}
 
+        {# RIGHT: PE interpretation table #}
         {% if interp %}
-        <div class="entropy-col">
-          <h5 class="entropy-subtitle">PE Interpretation</h5>
+        <div class="entropy-table-wrapper">
+          <h5 class="result-label">PE Interpretation</h5>
 
           {% if interp.flags %}
-            <ul class="flag-list">
+          <table class="detail-table entropy-interpret-table">
+            <thead>
+              <tr><th>Flags</th></tr>
+            </thead>
+            <tbody>
               {% for flag in interp.flags %}
-                <li>{{ flag }}</li>
+              <tr>
+                <td>{{ flag }}</td>
+              </tr>
               {% endfor %}
-            </ul>
+            </tbody>
+          </table>
           {% endif %}
 
           {% if interp.notes %}
-            <ul class="flag-list">
+          <table class="detail-table entropy-interpret-table entropy-notes-table">
+            <thead>
+              <tr><th>Notes</th></tr>
+            </thead>
+            <tbody>
               {% for note in interp.notes %}
-                <li>{{ note }}</li>
+              <tr>
+                <td>{{ note }}</td>
+              </tr>
               {% endfor %}
-            </ul>
+            </tbody>
+          </table>
           {% endif %}
         </div>
         {% endif %}
+
       </div>
       {% endif %}
-    </div>
+    </div>  {# /entropy-card #}
+
   {% endif %}
 {% endif %}
 
 
+<!-- 3) YARA Rule Matches -->
+<div class="detail-section section-card yara-card">
+
+  <h4 class="result-title">YARA Rule Matches</h4>
+
+  {% if not r.yara %}
+    <p class="muted-text">No YARA data available for this file.</p>
+
+  {% elif not r.yara.enabled %}
+    <p class="muted-text">YARA scanning is disabled (no rules compiled).</p>
+
+  {% elif r.yara.error %}
+    <p class="muted-text">
+      Error while scanning file with YARA:
+    </p>
+    <div class="code-block">{{ r.yara.error }}</div>
+
+  {% elif r.yara.matches %}
+    <p>The following YARA rule(s) matched this file:</p>
+
+    <div class="yara-table-wrapper">
+      <table class="yara-table">
+        <thead>
+          <tr>
+            <th>Rule Name</th>
+            <th>Description</th>
+            <th>Severity</th>
+            <th>Namespace</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in r.yara.matches %}
+          <tr>
+            <td><strong>{{ m.rule }}</strong></td>
+
+            <td>
+              {% if m.meta.description is defined %}
+                {{ m.meta.description }}
+              {% else %}
+                <span class="muted-text">No description</span>
+              {% endif %}
+            </td>
+
+            <td>
+              {% if m.meta.severity is defined %}
+                {{ m.meta.severity }}
+              {% else %}
+                <span class="muted-text">N/A</span>
+              {% endif %}
+            </td>
+
+            <td>{{ m.namespace or "-" }}</td>
+
+            <td>
+              {% if m.tags %}
+                {{ m.tags | join(", ") }}
+              {% else %}
+                <span class="muted-text">None</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% else %}
+    <p class="muted-text">No YARA rules matched this file.</p>
+  {% endif %}
+
+</div>
 
 
-
-          <!-- 3) YARA  results -->
-          <div class="detail-section">
-            <h4>YARA Rule Matches</h4>
-
-            {# Safety: if for some reason r.yara is missing #}
-            {% if not r.yara %}
-              <p class="muted-text">
-                No YARA data available for this file.
-              </p>
-
-            {# YARA not enabled (no rules / compile failed) #}
-            {% elif not r.yara.enabled %}
-              <p class="muted-text">
-                YARA scanning is currently disabled (no rules loaded or compilation failed).
-              </p>
-
-            {# YARA enabled but this scan had an error #}
-            {% elif r.yara.error %}
-              <p class="muted-text">
-                An error occurred while scanning this file with YARA:
-              </p>
-              <div class="code-block">
-                {{ r.yara.error }}
-              </div>
-
-            {# We have at least one match #}
-            {% elif r.yara.matches %}
-              <p class="muted-text">
-                The following YARA rule(s) matched this file:
-              </p>
-
-              <div class="table-wrapper">
-                <table class="detail-table">
-                  <thead>
-                    <tr>
-                      <th>Rule Name</th>
-                      <th>Description</th>
-                      <th>Severity</th>
-                      <th>Namespace</th>
-                      <th>Tags</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for m in r.yara.matches %}
-                      <tr>
-                        <td><strong>{{ m.rule }}</strong></td>
-
-                        {# meta.description may not exist #}
-                        <td>
-                          {% if m.meta.description is defined %}
-                            {{ m.meta.description }}
-                          {% else %}
-                            <span class="muted-text">No description</span>
-                          {% endif %}
-                        </td>
-
-                        {# meta.severity may not exist #}
-                        <td>
-                          {% if m.meta.severity is defined %}
-                            {{ m.meta.severity }}
-                          {% else %}
-                            <span class="muted-text">N/A</span>
-                          {% endif %}
-                        </td>
-
-                        <td>{{ m.namespace or "-" }}</td>
-
-                        <td>
-                          {% if m.tags %}
-                            {{ m.tags | join(", ") }}
-                          {% else %}
-                            <span class="muted-text">None</span>
-                          {% endif %}
-                        </td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-
-            {# YARA enabled, no error, but no matches #}
-            {% else %}
-              <p class="muted-text">
-                No YARA rules matched this file.
-              </p>
-            {% endif %}
-          </div>
 
           
 
-          <!-- 4) VirusTotal – placeholder -->
-          <div class="detail-section">
-            <h4>VirusTotal Summary</h4>
-            <p class="muted-text">
-              VirusTotal results will be shown here when integrated.
-            </p>
+
+          <!-- 4) VirusTotal  -->
+          {% set vt = r.virustotal %}
+          <div class="detail-section section-card">
+            <h4 class="result-title">VirusTotal Summary</h4>
+
+            {# Safety: no VT data at all #}
+            {% if not vt %}
+              <p class="muted-text">
+                No VirusTotal data available for this file.
+              </p>
+
+            {# VT disabled because no API key configured #}
+            {% elif not vt.enabled %}
+              <p class="muted-text">
+                VirusTotal is not configured (API key missing).
+              </p>
+
+            {# VT was called but there was an error (network, rate limit, etc.) #}
+            {% elif vt.error %}
+              <p class="muted-text">
+                VirusTotal error: {{ vt.error }}
+              </p>
+
+            {# VT worked, but hash not found in their database #}
+            {% elif not vt.found %}
+              <p class="muted-text">
+                No VirusTotal report found for this file hash.
+              </p>
+
+            {# VT worked and we have a proper report #}
+            {% else %}
+              <ul class="kv-list">
+                <li>
+                  <span class="result-label">Verdict</span>
+                  <span class="result-value">
+                    {{ vt.verdict|capitalize }}
+                  </span>
+                </li>
+                <li>
+                  <span class="result-label">Detections</span>
+                  <span class="result-value">
+                    {{ vt.malicious }} / {{ vt.total_engines }} engines
+                  </span>
+                </li>
+                <li>
+                  <span class="result-label">Harmless</span>
+                  <span class="result-value">
+                    {{ vt.harmless }}
+                  </span>
+                </li>
+                <li>
+                  <span class="result-label">Undetected</span>
+                  <span class="result-value">
+                    {{ vt.undetected }}
+                  </span>
+                </li>
+                <li>
+                  <span class="result-label">File SHA-256</span>
+                  <span class="result-value">
+                    <code>{{ vt.sha256 }}</code>
+                  </span>
+                </li>
+                {% if vt.permalink %}
+                <li>
+                  <span class="result-label">Full Report</span>
+                  <span class="result-value">
+                    <a href="{{ vt.permalink }}" target="_blank">
+                      Open on VirusTotal
+                    </a>
+                  </span>
+                </li>
+                {% endif %}
+              </ul>
+            {% endif %}
           </div>
 
           <!-- 5) ML Verdict – placeholder -->
-          <div class="detail-section">
+          <div class="detail-section section-card">
             <h4>ML Verdict</h4>
             <p class="muted-text">
               Machine learning verdict and score will be displayed here later.
             </p>
           </div>
+
+
 
           <!-- 6) Analyst Notes -->
           <div class="detail-section">
@@ -408,7 +512,7 @@ Swal.fire({
 })
 </script>
 {% endif %}
-<h4>meow</h4>
+
 
 </body>
 </html>

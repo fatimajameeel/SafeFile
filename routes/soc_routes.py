@@ -35,6 +35,7 @@ def soc_scan():
     uploaded_files = []  # files waiting to be scanned
 
     upload_folder = current_app.config["UPLOAD_FOLDER"]
+    vt_api_key = current_app.config.get("VT_API_KEY")
 
     if request.method == "POST":
         action = request.form.get("action")
@@ -49,16 +50,19 @@ def soc_scan():
                 save_path = os.path.join(upload_folder, name)
 
                 # Run analysis for each file
-                analysis = analyze_file(save_path)
+                analysis = analyze_file(save_path, vt_api_key=vt_api_key)
                 file_type_info = analysis["file_type"]
                 entropy_info = analysis["entropy"]
                 yara_info = analysis["yara"]
+                vt_info = analysis.get("virustotal")
 
                 analysis_results.append({
                     "display_name": name,
                     **file_type_info,
                     "entropy": entropy_info,
-                    "yara": yara_info
+                    "yara": yara_info,
+                    "virustotal": vt_info,
+
                 })
 
             file_message = f"Scanned {len(filenames)} file(s)."

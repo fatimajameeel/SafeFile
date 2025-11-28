@@ -1,0 +1,3 @@
+EmotetLoader12345
+emotet_service_start
+botnet_id=E12345

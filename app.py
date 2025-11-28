@@ -25,6 +25,9 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(soc_bp)
 
+    # VirusTotal API
+    app.config["VT_API_KEY"] = os.getenv("VT_API_KEY")
+
     return app
 
 

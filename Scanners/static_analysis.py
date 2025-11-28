@@ -3,9 +3,10 @@ from .entropy_analyzer import file_entropy
 from .pe_entropy import analyze_pe_entropy
 from .entropy_rules import interpret_pe_entropy
 from .yara_scanner import scan_file_with_yara
+from .virustotal_client import get_virustotal_report
 
 
-def analyze_file(file_path: str) -> dict:
+def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
     # 1) File type
     file_type_info = detect_file_type(file_path)
 
@@ -32,6 +33,16 @@ def analyze_file(file_path: str) -> dict:
     # 4) YARA Scan
     yara_report = scan_file_with_yara(file_path)
 
+    # 5) VirusTotal
+    if vt_api_key:
+        vt_report = get_virustotal_report(file_path, vt_api_key)
+    else:
+        vt_report = {
+            "enabled": False,
+            "found": False,
+            "error": "No API key configured",
+        }
+
     #  Build final combined result
     return {
         "file_type": file_type_info,
@@ -40,5 +51,6 @@ def analyze_file(file_path: str) -> dict:
             "pe_report": pe_report,
             "pe_interpretation": pe_interpretation,
         },
-        "yara": yara_report
+        "yara": yara_report,
+        "virustotal": vt_report,
     }

@@ -1,0 +1,3 @@
+njRAT_stub_active
+client_connect_c2=127.0.0.1
+xtremerat_fake_test
