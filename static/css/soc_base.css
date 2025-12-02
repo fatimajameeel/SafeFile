@@ -70,19 +70,6 @@ body {
   justify-content: flex-end;
 }
 
-/* container for both logo images */
-.logo-combo {
-  display: flex;
-  align-items: center;
-  flex-direction: row;   /* ensure they stay side by side */
-  gap: 4px;              /* space between the icon and text */
-}
-
-/* first image (bug/folder icon) */
-.logo-combo .icon {
-  width: 60px;
-  height: auto;
-}
 
 /* second image (SafeFile text) */
 .logo-combo .logo-text {

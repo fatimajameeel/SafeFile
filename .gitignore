@@ -11,3 +11,7 @@ safefile.db
 logs/*
 uploads/*
 .env
+
+
+ML-dataset/
+models/*.pkl

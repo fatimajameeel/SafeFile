@@ -91,6 +91,24 @@ def vt_lookup_file(sha256: str, api_key: str, timeout: int = 10) -> Dict[str, An
 
     total = malicious + suspicious + harmless + undetected + timeout_count
 
+    threat_cat = attrs.get("popular_threat_classification") or attrs.get(
+        "popular_threat_category") or {}
+    threat_label = None
+    if isinstance(threat_cat, dict):
+        threat_label = (
+            threat_cat.get("suggested_threat_label")
+            or threat_cat.get("label")
+            or threat_cat.get("value")
+            or threat_cat.get("type")
+        )
+
+    # Type tag as fallback
+    type_tag = attrs.get("type_tag")
+    if not threat_label and type_tag:
+        threat_label = type_tag
+
+    vt_tags = attrs.get("tags") or []
+
     # Simple verdict logic
     if malicious > 0 or suspicious > 0:
         verdict = "malicious"
@@ -112,6 +130,9 @@ def vt_lookup_file(sha256: str, api_key: str, timeout: int = 10) -> Dict[str, An
         "total_engines": total,
         "verdict": verdict,
         "permalink": permalink,
+        "threat_label": threat_label,
+        "tags": vt_tags,
+
     }
 
 

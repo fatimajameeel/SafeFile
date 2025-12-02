@@ -55,6 +55,8 @@ def soc_scan():
                 entropy_info = analysis["entropy"]
                 yara_info = analysis["yara"]
                 vt_info = analysis.get("virustotal")
+                ml_info = analysis.get("ml")
+                malware_type = analysis.get("malware_type")
 
                 analysis_results.append({
                     "display_name": name,
@@ -62,6 +64,8 @@ def soc_scan():
                     "entropy": entropy_info,
                     "yara": yara_info,
                     "virustotal": vt_info,
+                    "ml": ml_info,
+                    "malware_type": malware_type,
 
                 })
 

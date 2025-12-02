@@ -25,7 +25,7 @@
 
        <div class="Logo">
         <div class="logo-combo">
-            <img src="{{ url_for('static', filename='img/small_logo.png') }}" alt="SafeFile icon" class="icon">
+
              <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
          </div>
         </div>
@@ -98,7 +98,7 @@
           <button type="submit"
                   name="action"
                   value="scan"
-                  class="upload-btn file-btn">
+                  class="upload-btn ">
             Scan Files
           </button>
         </form>
@@ -135,49 +135,69 @@
 
         <div class="file-details">
 
-          <!-- File Type Detection -->
-<div class="detail-section section-card filetype-card">
-
+          <div class="detail-section section-card filetype-card">
   <h4 class="result-title">File Type Detection</h4>
 
- <table class="ft-table">
+  <ul class="kv-list">
 
-    <tr>
-      <td class="result-label">Declared Extension:</td>
-      <td><span class="pill-neutral">{{ r.declared_extension or "-" }}</span></td>
-    </tr>
+    <li>
+      <span class="result-label">Declared Extension</span>
+      <span class="result-value">{{ r.declared_extension or "-" }}</span>
+    </li>
 
+    <li>
+      <span class="result-label">Magic Type</span>
+      <span class="result-value">{{ r.magic_type or "-" }}</span>
+    </li>
 
-    <tr>
-      <td class="result-label">Magic Type:</td>
-      <td><span class="pill-neutral">{{ r.magic_type or "-" }}</span></td>
-    </tr>
+    <li>
+      <span class="result-label">Detected Type</span>
+      <span class="result-value">{{ r.final_type or "Unknown" }}</span>
+    </li>
 
+    <li>
+      <span class="result-label">Detected MIME</span>
+      <span class="result-value">{{ r.final_mime or "-" }}</span>
+    </li>
 
-    <tr>
-      <td class="result-label">Detected Type:</td>
-      <td><span class="pill-neutral">{{ r.final_type or "Unknown" }}</span></td>
-    </tr>
-
-
-    <tr>
-      <td class="result-label">Detected MIME:</td>
-      <td><span class="pill-neutral">{{ r.final_mime or "-" }}</span></td>
-    </tr>
-
-    <tr>
-      <td class="result-label">Type Mismatch:</td>
-      <td>
+    <li>
+      <span class="result-label">Type Mismatch</span>
+      <span class="result-value">
         {% if r.mismatch %}
           <span class="pill-bad">Mismatch</span>
         {% else %}
           <span class="pill-good">No</span>
         {% endif %}
-      </td>
-    </tr>
-  </table>
+      </span>
+    </li>
+
   </ul>
 </div>
+
+
+<!-- Malware Type -->
+{% set mt = r.malware_type %}
+<div class="detail-section section-card malwaretype-card">
+  <h4 class="result-title">Malware Type</h4>
+
+  {% if mt %}
+    <div class="mt-1">
+      <span class="pill-bad">{{ mt.label }}</span>
+    </div>
+    <p class="hint-text mt-1">
+      Source: {{ mt.source }}
+      {% if mt.details %}
+        · {{ mt.details }}
+      {% endif %}
+    </p>
+  {% else %}
+    <p class="muted-text">
+      No specific malware type identified. The file may be clean or there is not enough information to label it.
+    </p>
+  {% endif %}
+</div>
+
+
 
 
 {#---------- 2 Entropy Analysis – TABLE LAYOUT -------------#}
@@ -394,9 +414,6 @@
 
 
 
-          
-
-
           <!-- 4) VirusTotal  -->
           {% set vt = r.virustotal %}
           <div class="detail-section section-card">
@@ -473,13 +490,55 @@
             {% endif %}
           </div>
 
-          <!-- 5) ML Verdict – placeholder -->
-          <div class="detail-section section-card">
-            <h4>ML Verdict</h4>
-            <p class="muted-text">
-              Machine learning verdict and score will be displayed here later.
-            </p>
-          </div>
+<!-- 5) ---------------ML Verdict --------------->
+{% set ml = r.ml %}
+<div class="detail-section section-card">
+  <h4 class="result-title">Machine Learning Verdict</h4>
+
+  {# No ML data at all (e.g., non-PE file) #}
+  {% if not ml %}
+    <p class="muted-text">
+      ML analysis is only available for PE files (EXE/DLL). This file did not go through the ML classifier.
+    </p>
+
+  {# ML error happened in backend #}
+  {% elif ml.error %}
+    <p class="muted-text">
+      ML analysis error: {{ ml.error }}
+    </p>
+
+  {# Normal case: ML ran successfully #}
+  {% else %}
+    {% set score_pct = (ml.ml_score * 100) | round(1) %}
+    <ul class="kv-list">
+      <li>
+        <span class="result-label">ML Verdict</span>
+        <span class="result-value">
+          {% if ml.ml_verdict == "malware" %}
+            <span class="pill-bad">Malware</span>
+          {% elif ml.ml_verdict == "benign" %}
+            <span class="pill-good">Benign</span>
+          {% else %}
+            <span class="pill-neutral">{{ ml.ml_verdict }}</span>
+          {% endif %}
+        </span>
+      </li>
+      <li>
+        <span class="result-label">Malware Probability</span>
+        <span class="result-value">
+          {{ score_pct }}%
+        </span>
+      </li>
+      <li>
+        <span class="result-label">Decision Threshold</span>
+        <span class="result-value">
+          {{ (ml.ml_threshold * 100) | round(1) }}%
+        </span>
+      </li>
+    </ul>
+  {% endif %}
+</div>
+
 
 
 

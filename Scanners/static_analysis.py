@@ -4,6 +4,8 @@ from .pe_entropy import analyze_pe_entropy
 from .entropy_rules import interpret_pe_entropy
 from .yara_scanner import scan_file_with_yara
 from .virustotal_client import get_virustotal_report
+from .pe_ml_runtime import score_pe_file
+from .malware_type import infer_malware_type
 
 
 def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
@@ -13,9 +15,10 @@ def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
     # 2) Overall entropy for the whole file (any file type)
     overall = file_entropy(file_path)
 
-    # 3) Run PE-specific entropy
+    # 3) Run PE-specific entropy and ML result
     pe_report = None
     pe_interpretation = None
+    ml_result = None
 
     # decide if it is likely a PE based on detector output
     final_type = (file_type_info.get("final_type") or "").lower()
@@ -30,6 +33,18 @@ def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
         if pe_report.get("is_pe", False):
             pe_interpretation = interpret_pe_entropy(pe_report)
 
+        # Run the ML model for PE files
+        try:
+            ml_result = score_pe_file(file_path)
+        except Exception as e:
+            # If something goes wrong, don't break the whole scan
+            ml_result = {
+                "error": str(e),
+                "ml_score": None,
+                "ml_verdict": None,
+                "ml_threshold": 0.4,
+            }
+
     # 4) YARA Scan
     yara_report = scan_file_with_yara(file_path)
 
@@ -43,6 +58,9 @@ def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
             "error": "No API key configured",
         }
 
+    # 6) Malware type (VT + YARA)
+    malware_type = infer_malware_type(vt_report, yara_report)
+
     #  Build final combined result
     return {
         "file_type": file_type_info,
@@ -53,4 +71,6 @@ def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
         },
         "yara": yara_report,
         "virustotal": vt_report,
+        "ml": ml_result,
+        "malware_type": malware_type,
     }
