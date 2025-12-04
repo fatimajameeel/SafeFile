@@ -57,6 +57,7 @@ def soc_scan():
                 vt_info = analysis.get("virustotal")
                 ml_info = analysis.get("ml")
                 malware_type = analysis.get("malware_type")
+                final_verdict = analysis.get("final_verdict")
 
                 analysis_results.append({
                     "display_name": name,
@@ -66,6 +67,7 @@ def soc_scan():
                     "virustotal": vt_info,
                     "ml": ml_info,
                     "malware_type": malware_type,
+                    "final_verdict": final_verdict,
 
                 })
 

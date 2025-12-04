@@ -129,13 +129,71 @@
           </div>
           
           <span class="file-type">{{ r.final_type or "Unknown" }}</span>
-          <!-- placeholder for future verdict -->
-          <span class="badge badge-neutral">-</span>
+
+          {% set verdict = r.final_verdict %}
+          {% if verdict %}
+            <span class="badge badge-{{ verdict.verdict }}">
+              {{ verdict.verdict|capitalize }}
+            </span>
+          {% else %}
+            <span class="badge badge-neutral">No verdict</span>
+          {% endif %}
         </summary>
 
-        <div class="file-details">
+<div class="file-details">
 
-          <div class="detail-section section-card filetype-card">
+{% if verdict %}
+  <div class="detail-section section-card verdict-card">
+    <h4 class="result-title">Final Verdict</h4>
+
+    <ul class="kv-list">
+      <li>
+        <span class="result-label">Verdict</span>
+        <span class="result-value">
+          {% if verdict.verdict == "malicious" %}
+            <span class="pill-bad align">Malicious</span>
+          {% elif verdict.verdict == "benign" %}
+            <span class="pill-good align ">Benign</span>
+          {% else %}
+            <span class="pill-neutral align">Suspicious</span>
+          {% endif %}
+        </span>
+      </li>
+
+      <li>
+        <span class="result-label">Risk Score</span>
+        <span class="result-value">
+          {{ verdict.final_score|round(0) }}/100
+        </span>
+      </li>
+
+      <li>
+        <span class="result-label">Confidence</span>
+        <span class="result-value">
+          {{ verdict.confidence|capitalize }}
+        </span>
+      </li>
+    </ul>
+
+    {% if verdict.component_scores %}
+<h5 class="result-label" style="margin-top: 1rem;">Per-engine scores</h5>
+
+<ul class="kv-list">
+  {% for engine, score in verdict.component_scores.items() %}
+    <li>
+      <span class="result-label">{{ engine|replace("_", " ")|title }}</span>
+      <span class="result-value">{{ score|round(0) }}/100</span>
+    </li>
+  {% endfor %}
+</ul>
+
+
+    {% endif %}
+  </div>
+{% endif %}
+
+
+<div class="detail-section section-card filetype-card">
   <h4 class="result-title">File Type Detection</h4>
 
   <ul class="kv-list">
@@ -164,9 +222,9 @@
       <span class="result-label">Type Mismatch</span>
       <span class="result-value">
         {% if r.mismatch %}
-          <span class="pill-bad">Mismatch</span>
+          <span class="pill-bad align">Mismatch</span>
         {% else %}
-          <span class="pill-good">No</span>
+          <span class="pill-good align">No</span>
         {% endif %}
       </span>
     </li>

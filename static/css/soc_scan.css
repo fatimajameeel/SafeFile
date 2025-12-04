@@ -242,6 +242,8 @@
   font-size: 14px;
 }
 
+
+
 /* ---------- Generic card  ---------- */
 .section-card {
   margin-top: 12px;
@@ -277,6 +279,7 @@
   padding-right: 18px;
 }
 
+
 /* ---------- File Type Detection card ---------- */
 
 /* Table layout for File Type Detection */
@@ -302,12 +305,17 @@
 }
 
 .pill-bad {
-  background-color: #e53935;
-  color: white;
+  background: #fee2e2;
+  color: #b91c1c;
   border-radius: 20px;
   padding: 6px 16px;
   font-size: 16px;
   font-weight: 630;
+}
+
+
+.align {
+  margin-left: -20px;
 }
 
 /* ---------- File Type Detection card ----------*/

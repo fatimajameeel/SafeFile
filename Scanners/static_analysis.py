@@ -6,6 +6,7 @@ from .yara_scanner import scan_file_with_yara
 from .virustotal_client import get_virustotal_report
 from .pe_ml_runtime import score_pe_file
 from .malware_type import infer_malware_type
+from .final_verdict import compute_final_verdict
 
 
 def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
@@ -61,6 +62,20 @@ def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
     # 6) Malware type (VT + YARA)
     malware_type = infer_malware_type(vt_report, yara_report)
 
+    # 7) Final verdict from all engines
+
+    final_verdict = compute_final_verdict(
+        file_type_info=file_type_info,
+        entropy_info={
+            "overall_entropy": overall,
+            "pe_report": pe_report,
+            "pe_interpretation": pe_interpretation,
+        },
+        yara_info=yara_report,
+        vt_info=vt_report,
+        ml_info=ml_result,
+    )
+
     #  Build final combined result
     return {
         "file_type": file_type_info,
@@ -73,4 +88,5 @@ def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
         "virustotal": vt_report,
         "ml": ml_result,
         "malware_type": malware_type,
+        "final_verdict": final_verdict,
     }
