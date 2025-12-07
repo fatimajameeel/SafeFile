@@ -1,3 +1,0 @@
-hello this is a test file for SafeFile
-SafeFileTest123
-just some random text

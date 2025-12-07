@@ -157,8 +157,7 @@ def get_virustotal_report(path: str, api_key: Optional[str]) -> Dict[str, Any]:
         vt_data["sha256"] = sha256
         return vt_data
     except Exception as e:
-        # Any network/JSON error is caught here so the rest of
-        # the analysis still works.
+        # Any network/JSON error is caught here so the rest of the analysis still works.
         return {
             "enabled": True,
             "found": False,

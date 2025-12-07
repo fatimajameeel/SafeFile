@@ -1,3 +1,0 @@
-trickbot_config_version=1001
-bot_id=TBOT12345
-sin_table_loaded

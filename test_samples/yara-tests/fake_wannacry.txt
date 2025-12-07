@@ -1,3 +1,11 @@
 ms17-010 exploit sample text
 wannacry_version=2.0
 wcry0 decrypted block
+
+SAFEFILE_DEMO_WANNACRY
+
+Oops, your files have been encrypted!
+This is a fake WannaCry style message for demonstration only.
+
+Reference: MS17-010 demo payload string – not real exploit.
+

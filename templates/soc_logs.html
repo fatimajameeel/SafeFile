@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SafeFile SOC Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_logs.css') }}">
 </head>
 <body>
   <!-- Top Navigation Bar -->
@@ -27,9 +28,56 @@
 </div>
   </header>
 
-  <main class="content">
-    <h1>Logs</h1>
-    <p>This is the SOC logs page (placeholder).</p>
-  </main>
+<main class="content">
+
+  <!-- Logs Wrapper (white rounded panel) -->
+  <section class="logs-container">
+
+    <!-- Header -->
+    <div class="logs-header">
+      <div class="logs-title-wrap">
+        <h1 class="logs-title">System Logs</h1>
+      </div>
+    </div>
+
+    <!-- Dark Log Panel -->
+    <div class="logs-body">
+
+      {% if logs and logs|length > 0 %}
+      <div class="logs-list">
+        {% for log in logs %}
+        <div class="log-row log-severity-{{ log.severity|lower }}">
+          <span class="log-timestamp">[{{ log.timestamp }}]</span>
+          <span class="log-severity-pill">{{ log.severity }}</span>
+          <span class="log-message">{{ log.detail }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="logs-empty">
+        <p>No log events yet.</p>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- Footer -->
+    <div class="logs-footer">
+      <div class="logs-footer-left">
+        <span class="footer-sev footer-info"></span> INFO
+        <span class="footer-sev footer-warning"></span> WARNING
+        <span class="footer-sev footer-error"></span> ERROR
+      </div>
+
+      <div class="logs-footer-right">
+        {{ logs|length }} log entries
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+
 </body>
 </html>

@@ -5,6 +5,12 @@ import os
 from db import close_db
 from routes.auth_routes import auth_bp
 from routes.soc_routes import soc_bp
+import routes.soc_scan
+import routes.soc_home
+import routes.soc_history
+import routes.soc_logs
+import routes.normal_scan
+import routes.normal_history
 
 
 def create_app():

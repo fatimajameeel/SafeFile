@@ -7,9 +7,9 @@ from typing import Any, Dict, List, Optional, Tuple
 WEIGHTS: Dict[str, float] = {
     "file_type": 0.05,
     "entropy": 0.10,
-    "yara": 0.30,
+    "yara": 0.35,
     "virustotal": 0.35,
-    "ml": 0.20,
+    "ml": 0.15,
 }
 
 # Thresholds for mapping the numeric score (0–100) to a verdict label.
@@ -108,7 +108,7 @@ def score_entropy(entropy_info: Optional[Dict[str, Any]]) -> Tuple[int, List[str
 
 def score_yara(yara_info: Optional[Dict[str, Any]]) -> Tuple[int, List[str]]:
     """
-    Turn YARA matches into a 0–100 risk score.
+    Turn YARA matches into a 0-100 risk score.
     yara_info is the dict returned by scan_file_with_yara().
     """
     if not yara_info:
@@ -156,7 +156,7 @@ def score_yara(yara_info: Optional[Dict[str, Any]]) -> Tuple[int, List[str]]:
 
 def score_virustotal(vt_info: Optional[Dict[str, Any]]) -> Tuple[int, List[str]]:
     """
-    Turn VirusTotal report into a 0–100 risk score.
+    Turn VirusTotal report into a 0-100 risk score.
     vt_info is expected to be the dict returned by get_virustotal_report().
     """
     if not vt_info:
@@ -205,7 +205,7 @@ def score_virustotal(vt_info: Optional[Dict[str, Any]]) -> Tuple[int, List[str]]
 
 def score_ml(ml_info: Optional[Dict[str, Any]]) -> Tuple[int, List[str]]:
     """
-    Turn ML model output into a 0–100 risk score.
+    Turn ML model output into a 0-100 risk score.
     ml_info is expected to be the dict returned by score_pe_file().
     """
     if not ml_info:
