@@ -5,6 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SafeFile SOC Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_home.css') }}">
+
+<script>
+
+  // Data for the Threat Activity line chart
+  window.chartPoints = JSON.parse(`{{ week_chart | tojson | safe }}`);
+  // Data for the Threat Categories pie chart
+  window.malwareTypeData = JSON.parse(`{{ malware_type_data | tojson | safe }}`);
+  // Data for the Verdict Distribution pie chart (from KPI helper)
+  window.verdictData = JSON.parse(`{{ kpi_stats.verdict_distribution | tojson | safe }}`);
+  // Data for the Top YARA rules bar chart 
+  window.topYaraData = JSON.parse(`{{ top_yara | tojson | safe }}`);
+    // Data for daily upload volume 
+  window.dailyVolumeData = JSON.parse(`{{ daily_volume | tojson | safe }}`);
+
+
+
+
+</script>
+
+
+<!-- Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/week_chart_soc_home.js') }}"></script>
+<script src="{{ url_for('static', filename='js/malware_type_pie.js') }}"></script> 
+<script src="{{ url_for('static', filename='js/verdict_distribution_pie.js') }}"></script>
+<script src="{{ url_for('static', filename='js/top_yara_bar.js') }}"></script> 
+<script src="{{ url_for('static', filename='js/daily_volume.js') }}"></script>
+
+
+
+
+
 </head>
 <body>
   <!-- Top Navigation Bar -->
@@ -20,15 +53,206 @@
     </div>
 
     <div class="right">
-  <div class="logo-combo">
-    <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
-  </div>
-</div>
+      <div class="logo-combo">
+        <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
+      </div>
+    </div>
   </header>
 
   <main class="content">
-    <h1>Home</h1>
-    <p>This is the SOC home page (placeholder).</p>
+    <!-------------------- KPI Section: top overview cards-------------------->
+    <section class="kpi-section">
+      <!-- Header above the cards: title + period info -->
+      <div class="kpi-header">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="kpi-period">{{ kpi_stats.period_label }} {{ kpi_stats.comparison_label }} :</p>
+        <!-- <p class="kpi-comparison">{{ kpi_stats.comparison_label }}</p> -->
+      </div>
+
+      <!-- Grid that holds all KPI cards -->
+      <div class="kpi-grid">
+        {% for card in kpi_stats.cards %}
+          <article class="kpi-card kpi-{{ card.id }}">
+            <!-- Left side: title, subtitle, main value, trend -->
+            <div class="kpi-card-main">
+              <h2 class="kpi-title">{{ card.title }}</h2>
+
+              <!-- Sub-label = time range (weekly) -->
+              <!-- <p class="kpi-subtitle">{{ kpi_stats.period_label }}</p> -->
+
+              <!-- Big main value -->
+              <p class="kpi-value">
+                {% if card.id == "detection_rate" %}
+                  {{ card.current_value }}%
+                {% else %}
+                  {{ card.current_value }}
+                {% endif %}
+              </p>
+
+              <!-- Trend line -->
+              <div class="kpi-trend">
+                {% if card.change_percent is not none %}
+                  {% if card.change_percent > 0 %}
+                    <span class="kpi-trend-arrow up">▲</span>
+                  {% elif card.change_percent < 0 %}
+                    <span class="kpi-trend-arrow down">▼</span>
+                  {% else %}
+                    <span class="kpi-trend-arrow neutral">●</span>
+                  {% endif %}
+
+                  <span class="kpi-trend-value">
+                    {{ card.change_percent|round(1) }}%
+                  </span>
+                  <span class="kpi-trend-label">
+                    {{ kpi_stats.comparison_label }}
+                  </span>
+                {% else %}
+                  <span class="kpi-trend-label no-data">
+                    No previous data
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Right side: icon pill -->
+            <div class="kpi-icon-wrapper">
+              <div class="kpi-icon">
+                {% if card.id == "total" %}
+                  <img  class="icon-img-s" src="{{ url_for('static', filename='img/icons/shield.png') }}" alt="Total scanned">
+                {% elif card.id == "safe" %}
+                  <img  class="icon-img" src="{{ url_for('static', filename='img/icons/checked.png') }}" alt="Safe files">
+                {% elif card.id == "suspicious" %}
+                  <img  class="icon-img-s" src="{{ url_for('static', filename='img/icons/warning.png') }}" alt="Suspicious files">
+                {% elif card.id == "malicious" %}
+                  <img  class="icon-img-s" src="{{ url_for('static', filename='img/icons/cross.png') }}" alt="Malicious files">
+                {% elif card.id == "detection_rate" %}
+                  <img  class="icon-img" src="{{ url_for('static', filename='img/icons/percentage.png') }}" alt="Malicious files">
+                {% endif %}
+              </div>
+            </div>
+
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+
+        <!------------------------- Threat Activity Chart Section  ------------------>
+        <!-- ===== Charts row under the KPIs ===== -->
+    <section class="chart-section">
+      <div class="charts-row">
+        <!-- Left: Threat Activity -->
+        <div class="chart-card line-card">
+          <div class="chart-header">
+            <div>
+              <h2 class="chart-title">Threat Activity</h2>
+              <p class="chart-subtitle">Alerts vs Total Scans · Last 7 days</p>
+            </div>
+
+            <div class="chart-legend">
+              <span class="legend-item">
+                <span class="legend-dot alerts"></span> Alerts (Suspicious + Malicious)
+              </span>
+              <span class="legend-item">
+                <span class="legend-dot total"></span> Total Scans
+              </span>
+            </div>
+          </div>
+
+          <div class="chart-body">
+            <canvas id="threatActivityChart"></canvas>
+          </div>
+        </div>
+
+        <!----------------- Right: Threat Categories pie chart ------------->
+        <div class="chart-card verdict-card">
+          <div class="chart-header">
+            <div>
+              <h2 class="chart-title">Verdict Distribution</h2>
+              <p class="chart-subtitle">Safe vs Suspicious vs Malicious</p>
+            </div>
+          </div>
+
+          <div class="chart-body pie-body">
+            <canvas id="verdictDistributionChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+        <!----------------------- Malware Types (Threat Categories) below the main charts  ---------->
+<!----------------------- Malware Types + Top YARA Rules --------------------->
+<section class="chart-section secondary-charts">
+  <div class="charts-row">
+    <!-- Left: Threat Categories (pie) -->
+    <div class="chart-card pie-card small-pie">
+      <div class="chart-header">
+        <div>
+          <h2 class="chart-title">Threat Categories</h2>
+          <p class="chart-subtitle">Malware types · All time</p>
+        </div>
+      </div>
+
+      <div class="chart-body pie-body">
+        <canvas id="malwareTypeChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Right: Top YARA Rules (bar) -->
+    <div class="chart-card yara-card">
+      <div class="chart-header">
+        <div>
+          <h2 class="chart-title">Top YARA Rules</h2>
+          <p class="chart-subtitle">Most frequently matched rules · All time</p>
+        </div>
+      </div>
+
+      <div class="chart-body yara-body">
+        <canvas id="topYaraChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!----------------------- Activity Breakdown: Daily Volume + File Types ----------------------->
+<section class="chart-section activity-breakdown">
+  <div class="charts-row">
+
+    <!-- Left: Daily Upload Volume (horizontal bar) -->
+    <div class="chart-card volume-card">
+      <div class="chart-header">
+        <div>
+          <h2 class="chart-title">Daily Upload Volume</h2>
+          <p class="chart-subtitle">Number of files scanned per day · Last 7 days</p>
+        </div>
+      </div>
+
+      <div class="chart-body volume-body">
+        <canvas id="dailyVolumeChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Right: File Types Scanned (pie/doughnut) -->
+    <!-- <div class="chart-card filetype-card">
+      <div class="chart-header">
+        <div>
+          <h2 class="chart-title">File Types Scanned</h2>
+          <p class="chart-subtitle">Most common file types · All time</p>
+        </div>
+      </div>
+
+      <div class="chart-body filetype-body">
+        <canvas id="fileTypeChart"></canvas>
+      </div>
+    </div> -->
+
+  </div>
+</section>
+
+
+
+
+
   </main>
+
 </body>
 </html>
