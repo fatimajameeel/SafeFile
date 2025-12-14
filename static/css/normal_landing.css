@@ -1,0 +1,200 @@
+/* Overall page background & font */
+.normal-landing {
+  background-color: #F9F7FF;              
+  color: #2D0A72;                         /* deep purple for headings */
+}
+
+/* ------------------------- START   (logo + tagline) ------------------------- */
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 32px;              /* space before the next section */
+}
+
+/* container that holds icon + text logo side-by-side */
+.hero-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;                         /* space between icon & text */
+  margin-bottom: 8px;
+}
+
+/* the folder+bug icon */
+.hero-logo-icon {
+  height: 150px;                   
+  width: auto;
+}
+
+/* the SafeFile text image */
+.hero-logo-text {
+  height: 100px;                      
+  width: auto;
+}
+
+/* tagline under the logo */
+.hero-tagline {
+  font-size: 22px;
+  color: #6f6f8f;
+}
+
+
+  /* .scan-btn {
+  display: inline-block;
+  background: #f0eaff;
+  color: #4b2ca7;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid #cbb8ff;
+  text-decoration: none;
+  font-weight: 550;
+  transition: 0.3s ease;
+  font-size: 18px;
+}
+
+.scan-btn:hover {
+  background: linear-gradient(90deg, #ff7b4f, #5924d0);
+  border: 2px solid #ff7b4f;
+  color: white;
+  transform: translateY(-2px) ease;
+transition: 0.3s ease;
+
+} */
+
+
+
+/* ------------------------- END (logo + tagline) ------------------------- */
+
+/* ---------- Upload card (outer container) ---------- */
+
+.upload-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.upload-card {
+  background-color: #ffffff;
+  border-radius: 28px;
+  padding: 32px 40px 28px;
+  max-width: 840px;
+  width: 100%;
+  box-shadow: 0 24px 70px rgba(148, 115, 255, 0.28);
+  border: 1px solid rgba(197, 176, 255, 0.6);
+}
+
+
+/* Inner dashed drop area */
+
+.upload-dropzone {
+  border: 3.6px dashed #e0d4ff;
+  border-radius: 22px;
+  padding: 44px 20px;
+  background: #ffffff;
+  transition: all 0.25s ease;
+}
+
+.upload-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Icon background inside the dropzone */
+
+.upload-icon-wrapper {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #f0e9ff, #e2d6ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: all 0.25s ease;
+}
+
+.upload-icon {
+  width: 60px;
+  height: 60px;
+}
+
+/* Text inside drop area */
+
+.upload-title {
+  font-size: 22px;
+  font-weight: 650;
+  color: #3c228b;
+  margin-bottom: 4px;
+}
+
+.upload-subtitle {
+  font-size: 18px;
+  color: #8e8ea8;
+}
+
+/*  Hover effect: border */
+
+.upload-dropzone:hover {
+  border: 3.6px dashed #9a79ed;
+  background: #F9F7FF;
+  transition: all 0.25s ease;
+
+}
+
+ /* Buttons row under dropzone */
+
+.upload-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+/* Base style for both buttons */
+/* layout of the two buttons */
+.upload-actions {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+/* MAIN BUTTON STYLE */
+.upload-btn {
+  border: 2px solid #7503C0;
+  color: #fff;
+  background:   #7503C0;
+  display: flex;
+  align-items: center;
+  padding: 18px 60px;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-top:20px;
+}
+
+/* Hover effect */
+.upload-btn:hover {
+  background: linear-gradient(90deg, #ff7b4f, #5924d0);
+  border: 2px solid #ff7b4f;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  width: 20px;
+  height: 20px;
+  transition: 0.3s;
+   stroke: white;
+}
+
+.upload-btn:hover .btn-icon path {
+  stroke: white;
+}

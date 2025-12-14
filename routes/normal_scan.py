@@ -1,9 +1,10 @@
-# routes/normal_scan.py
+# routes/user/scan.py
 
 from flask import render_template
-from .soc_routes import soc_bp
+from .normal_routes import normal_bp
 
 
-@soc_bp.route("/normal/normal")
+@normal_bp.route("/normal/scan")
 def normal_scan():
+
     return render_template("normal_scan.html")

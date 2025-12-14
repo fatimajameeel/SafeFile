@@ -84,6 +84,8 @@ def main():
         # Slightly favour benign class (0) to reduce false positives
         class_weight={0: 2.0, 1: 1.0},
 
+
+
         n_jobs=-1,
         random_state=42,
     )
@@ -122,10 +124,10 @@ def main():
                                 target_names=["benign", "malware"]))
 
     # 8) Save trained model to disk so SafeFile can use it later
-    model_path = project_root / "models" / "pe_malware_model.pkl"
-    model_path.parent.mkdir(parents=True, exist_ok=True)
-    dump(model, model_path)
-    print(f"\n[6/5] Saved model to: {model_path}")
+    # model_path = project_root / "models" / "pe_malware_model.pkl"
+    # model_path.parent.mkdir(parents=True, exist_ok=True)
+    # dump(model, model_path)
+    # print(f"\n[6/5] Saved model to: {model_path}")
 
 
 if __name__ == "__main__":

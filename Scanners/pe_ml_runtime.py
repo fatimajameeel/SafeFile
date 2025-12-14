@@ -4,10 +4,12 @@ from joblib import load
 import lief
 import ember  # EMBER feature extractor
 
-
 _MODEL = None
 _EXTRACTOR = None
-ML_THRESHOLD = 0.4
+
+# Threshold bands for 3-level ML verdict
+BENIGN_THRESHOLD = 0.3
+MALICIOUS_THRESHOLD = 0.7
 
 
 def get_project_root() -> Path:
@@ -41,21 +43,38 @@ def extract_features_from_pe(file_path: Path) -> np.ndarray:
 
     features = extractor.feature_vector(pe_bytes)
     return np.array(features, dtype=np.float32).reshape(1, -1)
-# Take a PE file and turn it into the correct numeric input for the ML model.
+
+
+def interpret_ml_probability(prob: float) -> str:
+    """
+    Converts probability into a clean 3-level verdict:
+      <0.3     → benign
+      0.3-0.7  → suspicious
+      ≥0.7     → malicious
+    """
+    if prob < BENIGN_THRESHOLD:
+        return "benign"
+    elif prob < MALICIOUS_THRESHOLD:
+        return "suspicious"
+    else:
+        return "malicious"
 
 
 def score_pe_file(file_path: Path) -> dict:
-    """Uses the ML model to score a PE file."""
+    """
+    Uses the ML model to score a PE file.
+    Returns probability + 3-level verdict.
+    """
     model = load_pe_model()
     X = extract_features_from_pe(file_path)
 
-    probability = model.predict_proba(X)[0, 1]
-    verdict = "malware" if probability >= ML_THRESHOLD else "benign"
+    probability = float(model.predict_proba(X)[0, 1])
+    verdict = interpret_ml_probability(probability)
 
     return {
-        "ml_score": float(probability),
-        "ml_verdict": verdict,
-        "ml_threshold": ML_THRESHOLD,
+        "ml_score": probability,
+        "ml_verdict": verdict,  # 'benign' / 'suspicious' / 'malicious'
+        "ml_threshold": None,
+        "benign_threshold": BENIGN_THRESHOLD,
+        "malicious_threshold": MALICIOUS_THRESHOLD,
     }
-# If probability ≥ 0.4 → “malware”
-# Else → “benign”

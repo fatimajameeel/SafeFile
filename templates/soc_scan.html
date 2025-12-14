@@ -553,44 +553,57 @@
 <div class="detail-section section-card">
   <h4 class="result-title">Machine Learning Verdict</h4>
 
-  {# No ML data at all (e.g., non-PE file) #}
   {% if not ml %}
     <p class="muted-text">
       ML analysis is only available for PE files (EXE/DLL). This file did not go through the ML classifier.
     </p>
 
-  {# ML error happened in backend #}
   {% elif ml.error %}
     <p class="muted-text">
       ML analysis error: {{ ml.error }}
     </p>
 
-  {# Normal case: ML ran successfully #}
   {% else %}
     {% set score_pct = (ml.ml_score * 100) | round(1) %}
+    {# safely pull thresholds, with 0.3 / 0.7 as defaults #}
+    {% set b = ml.benign_threshold|default(0.3, true) %}
+    {% set m = ml.malicious_threshold|default(0.7, true) %}
+
     <ul class="kv-list">
       <li>
         <span class="result-label">ML Verdict</span>
         <span class="result-value">
-          {% if ml.ml_verdict == "malware" %}
-            <span class="pill-bad">Malware</span>
+          {% if ml.ml_verdict == "malicious" %}
+            <span class="pill-bad">Malicious</span>
           {% elif ml.ml_verdict == "benign" %}
             <span class="pill-good">Benign</span>
+          {% elif ml.ml_verdict == "suspicious" %}
+            <span class="pill-neutral">Suspicious</span>
           {% else %}
-            <span class="pill-neutral">{{ ml.ml_verdict }}</span>
+            <span class="pill-neutral">{{ ml.ml_verdict|default("Unknown")|capitalize }}</span>
           {% endif %}
         </span>
       </li>
+
       <li>
         <span class="result-label">Malware Probability</span>
         <span class="result-value">
           {{ score_pct }}%
         </span>
       </li>
+
       <li>
-        <span class="result-label">Decision Threshold</span>
+        <span class="result-label">Decision Bands</span>
         <span class="result-value">
-          {{ (ml.ml_threshold * 100) | round(1) }}%
+          <div class="band-line">
+            <strong>Benign:</strong> &lt; {{ (b * 100) | round(0) }}%
+          </div>
+          <div class="band-line">
+            <strong>Suspicious:</strong> {{ (b * 100) | round(0) }}% – {{ (m * 100) | round(0) }}%
+          </div>
+          <div class="band-line">
+            <strong>Malicious:</strong> ≥ {{ (m * 100) | round(0) }}%
+          </div>
         </span>
       </li>
     </ul>

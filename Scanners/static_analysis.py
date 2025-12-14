@@ -43,7 +43,9 @@ def analyze_file(file_path: str, vt_api_key: str | None = None) -> dict:
                 "error": str(e),
                 "ml_score": None,
                 "ml_verdict": None,
-                "ml_threshold": 0.4,
+                "ml_threshold": None,
+                "benign_threshold": 0.3,
+                "malicious_threshold": 0.7,
             }
 
     # 4) YARA Scan

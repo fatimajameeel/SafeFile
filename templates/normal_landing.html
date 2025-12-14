@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeFile - Normal User</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/normal_landing.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="normal-landing">
+  <!-- Simple topbar -->
+  <header class="topbar normal-topbar">
+    <div class="left">
+      <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
+      <nav class="nav-links">
+        <a href="{{ url_for('normal.normal_landing') }}" class="active">Home</a>
+        <a href="{{ url_for('normal.normal_scan') }}">Scan</a>
+        <a href="{{ url_for('normal.normal_history') }}">History</a>
+      </nav>
+    </div>
+
+    <div class="right">
+      <div class="logo-combo">
+        <img src="{{ url_for('static', filename='img/text-logo.png') }}" 
+             alt="SafeFile logo text" 
+             class="logo-text">
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+<main class="normal-main">
+  <!--- ----------------------- TOP HERO SECTION ---------------------------------------------->
+  <section class="hero-section">
+    <!-- Logo icon + text together -->
+    <div class="hero-logo">
+      <img
+        src="{{ url_for('static', filename='img/small_logo.png') }}"
+        alt="SafeFile icon"
+        class="hero-logo-icon"
+      >
+      <img
+        src="{{ url_for('static', filename='img/text-logo.png') }}"
+        alt="SafeFile"
+        class="hero-logo-text"
+      >
+    </div>
+
+    <!------------------- Tagline under the logo ------------------>
+    <p class="hero-tagline">
+      Easily scan your files and folders for potential risks.
+    </p>
+  </section>
+
+    <!--------------------------------- UPLOAD CARD SECTION----------------------------- -->
+  <section class="upload-section">
+    <div class="upload-card">
+      <!---------------------- Drag & drop area ------------------------->
+      <div class="upload-dropzone">
+        <div class="upload-inner">
+          <div class="upload-icon-wrapper">
+            <img
+              src="{{ url_for('static', filename='img/upload.png') }}"
+              alt="Upload icon"
+              class="upload-icon"
+            >
+          </div>
+          <p class="upload-title">Drop your file here</p>
+          <p class="upload-subtitle">or choose an option below</p>
+        </div>
+      </div>
+
+      <!-- Buttons under the dropzone -->
+<div class="upload-actions">
+
+        <!-- FILE UPLOAD BUTTON -->
+        <form method="POST" enctype="multipart/form-data" id="fileForm">
+         <label class="upload-btn file-btn">
+          <input type="file" name="single_files" multiple hidden onchange="document.getElementById('fileForm').submit();">
+            <svg class="btn-icon" viewBox="0 0 24 24">
+             <path d="M12 3v12m0-12l-4 4m4-4l4 4M5 21h14a2 2 0 0 0 2-2v-5H3v5a2 2 0 0 0 2 2z"
+             stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+               Upload File
+          </label>
+        </form>
+
+        <!-- FOLDER UPLOAD BUTTON -->
+        <form method="POST" enctype="multipart/form-data" id="folderForm">
+         <label class="upload-btn folder-btn">
+          <input type="file" name="folder_files" webkitdirectory hidden onchange="document.getElementById('folderForm').submit();">
+            <svg class="btn-icon" viewBox="0 0 24 24">
+             <path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+               Upload Folder
+         </label>
+        </form>
+      </div>
+    </div>
+  </section>
+
+
+</main>
+
+</body>
+</html>

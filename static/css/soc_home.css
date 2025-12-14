@@ -377,7 +377,7 @@
 /* YARA chart width + height */
 .yara-card .chart-body {
   height: 260px;
-  max-width: 550px;   /* let it be wider */
+  max-width: 600px;   /* let it be wider */
   margin: 0 auto;
 }
 
@@ -391,7 +391,7 @@
 
 
 .volume-card {
-  flex: 0.7; 
+  flex: 1; 
   margin-left: auto;
   margin-right: auto;    
 }

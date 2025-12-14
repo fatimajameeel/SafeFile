@@ -5,12 +5,14 @@ import os
 from db import close_db
 from routes.auth_routes import auth_bp
 from routes.soc_routes import soc_bp
+from routes.normal_routes import normal_bp
 import routes.soc_scan
 import routes.soc_home
 import routes.soc_history
 import routes.soc_logs
 import routes.normal_scan
 import routes.normal_history
+import routes.normal_landing
 
 
 def create_app():
@@ -30,6 +32,7 @@ def create_app():
     # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(soc_bp)
+    app.register_blueprint(normal_bp)
 
     # VirusTotal API
     app.config["VT_API_KEY"] = os.getenv("VT_API_KEY")

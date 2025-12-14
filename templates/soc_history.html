@@ -5,30 +5,112 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SafeFile SOC Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_history.css') }}">
+
 </head>
 <body>
-  <!-- Top Navigation Bar -->
+  <!---------------- Top Navigation Bar ---------------->
   <header class="topbar">
     <div class="left">
       <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
       <nav class="nav-links">
         <a href="{{ url_for('soc.soc_home') }}">Home</a>
         <a href="{{ url_for('soc.soc_scan') }}">Scan</a>
-        <a href="{{ url_for('soc.soc_history') }}" class ="active">History</a>
+        <a href="{{ url_for('soc.soc_history') }}" class="active">History</a>
         <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
       </nav>
     </div>
 
-       <div class="right">
-  <div class="logo-combo">
-  <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
-  </div>
-</div>
+    <div class="right">
+      <div class="logo-combo">
+        <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
+      </div>
+    </div>
   </header>
 
   <main class="content">
-    <h1>History</h1>
-    <p>This is the SOC history page (placeholder).</p>
+
+    <!------------------ History Card -------------->
+    <section class="history-card">
+      <header class="history-header">
+        <h1 class="history-title">Scan History</h1>
+      </header>
+
+      <!------------- Filters row ------------->
+      <form method="get" class="history-filters">
+        <!-- Search input -->
+        <div class="history-search">
+          <input
+            type="text"
+            name="q"
+            value="{{ q }}"
+            placeholder="Search by file name or uploader..."
+            class="history-search-input"
+          />
+        </div>
+
+        <!-- Verdict dropdown -->
+        <div class="history-verdict-filter">
+          <select name="verdict" class="history-verdict-select">
+            <option value="all" {% if verdict_filter == 'all' %}selected{% endif %}>All verdicts</option>
+            <option value="benign" {% if verdict_filter == 'benign' %}selected{% endif %}>Benign</option>
+            <option value="suspicious" {% if verdict_filter == 'suspicious' %}selected{% endif %}>Suspicious</option>
+            <option value="malicious" {% if verdict_filter == 'malicious' %}selected{% endif %}>Malicious</option>
+          </select>
+
+        </div>
+      </form>
+
+      <!-- History table -->
+      <div class="history-table-wrapper">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>File Name</th>
+              <th>Date</th>
+              <th>Verdict</th>
+              <th>Uploaded By</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if rows %}
+              {% for row in rows %}
+                {% set verdict = row["final_verdict"] %}
+                <tr>
+                  <td>{{ row["file_name"] }}</td>
+                  <td>{{ row["timestamp"] }}</td>
+                  <td>
+                      {% set verdict_raw = row["final_verdict"] %}
+                      {% set v = (verdict_raw or "unknown")|lower %}
+                      <span
+                        class="verdict-pill
+                          {% if v == 'benign' %}pill-benign
+                          {% elif v == 'suspicious' %}pill-suspicious
+                          {% elif v == 'malicious' %}pill-malicious
+                          {% else %}pill-unknown{% endif %}">
+                        {{ v|capitalize }}
+                      </span>
+                    </td>
+                  <td>{{ row["uploaded_by"] }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="4" class="history-empty">
+                  No scan records match your filters yet.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer: showing X of Y -->
+      <footer class="history-footer">
+        <p>Showing {{ showing_count }} of {{ total_count }} records</p>
+      </footer>
+    </section>
+
   </main>
 </body>
 </html>

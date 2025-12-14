@@ -42,9 +42,10 @@ body {
   text-decoration: none;
   color: #555;
   margin: 0 35px;
-  font-weight: 500;
+  font-weight: 550;
   position: relative;
   transition: color .2s ease;
+  font-size: 18px;
 }
 
 .nav-links a:hover {

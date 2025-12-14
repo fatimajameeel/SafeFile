@@ -3,130 +3,37 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SafeFile SOC Dashboard</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_scan.css') }}">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>SafeFile - Scan</title>
 
+  <!-- Reuse your existing styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
 
 </head>
+
 <body>
-  <!-- Top Navigation Bar -->
-  
-
-
-       <div class="Logo">
-        <div class="logo-combo">
-            <img src="{{ url_for('static', filename='img/small_logo.png') }}" alt="SafeFile icon" class="icon">
-             <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
-         </div>
-        </div>
-  </header>
-
-<main class="content scan-page">
-  
-
-<div class="upload-container">
-  <h2>Upload Files for Scanning</h2>
-<div class="upload-actions">
-
-        <!-- FILE UPLOAD BUTTON -->
-        <form method="POST" enctype="multipart/form-data" id="fileForm">
-         <label class="upload-btn file-btn">
-          <input type="file" name="single_files" multiple hidden onchange="document.getElementById('fileForm').submit();">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-             <path d="M12 3v12m0-12l-4 4m4-4l4 4M5 21h14a2 2 0 0 0 2-2v-5H3v5a2 2 0 0 0 2 2z"
-              stroke="#5924d0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-               Upload File
-          </label>
-        </form>
-
-        <!-- FOLDER UPLOAD BUTTON -->
-        <form method="POST" enctype="multipart/form-data" id="folderForm">
-         <label class="upload-btn folder-btn">
-          <input type="file" name="folder_files" webkitdirectory hidden onchange="document.getElementById('folderForm').submit();">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-             <path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="#5924d0" stroke-width="2" fill="none"
-              stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-               Upload Folder
-         </label>
-        </form>
-      </div>
+  <!-- Simple topbar -->
+  <header class="topbar">
+    <div class="left">
+      <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
+      <nav class="nav-links">
+        <a href="{{ url_for('normal.normal_landing') }}" >Home</a>
+        <a href="{{ url_for('normal.normal_scan') }}" class="active">Scan</a>
+        <a href="{{ url_for('normal.normal_history') }}">History</a>
+      </nav>
     </div>
 
-    <!-- FILE MESSAGE -->
-    {% if file_message %}
-      <div class="result-message">
-        {{ file_message }}
-      </div>
-    {% endif %}
+       <div class="right">
+  <div class="logo-combo">
+   
+    <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
+  </div>
+</div>
+  </header>
 
-    <!-- FOLDER CONTENT TABLE -->
-    {% if folder_file_list %}
-      <div class="folder-results">
-        <h3>Folder Contents</h3>
-
-        <table>
-          <tr>
-            <th>File Name</th>
-          </tr>
-
-          {% for f in folder_file_list %}
-          <tr>
-            <td>{{ f }}</td>
-          </tr>
-          {% endfor %}
-        </table>
-      </div>
-    {% endif %}
-
-    {% if analysis_results %}
-      <div class="scan-results">
-        <h3>File Type Detection Results</h3>
-
-        <table>
-          <tr>
-            <th>File</th>
-            <th>Declared Ext</th>
-            <th>Detected Type</th>
-            <th>Detected MIME</th>
-            <th>Mismatch</th>
-          </tr>
-
-          {% for r in analysis_results %}
-          <tr>
-            <td>{{ r.display_name }}</td>
-            <td>{{ r.declared_extension or "-" }}</td>
-            <td>{{ r.final_type or "Unknown" }}</td>
-            <td>{{ r.final_mime or "-" }}</td>
-            <td>
-              {% if r.mismatch %}
-                <span class="badge badge-bad">Mismatch</span>
-              {% else %}
-                <span class="badge badge-good">OK</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </table>
-      </div>
-    {% endif %}
-
-</main>
-
-{% if error_message %}
-<script>
-Swal.fire({
-  icon: 'error',
-  title: 'Upload Error',
-  html: '{{ error_message }}',
-  confirmButtonColor: '#6d28d9',
-  width: 500
-})
-</script>
-{% endif %}
-
+  <!-- Main content -->
+  <main class="user-main">
+    <h1>Welcome to SafeFile</h1>
+    <p>scan page </p>
+  </main>
 </body>
 </html>
