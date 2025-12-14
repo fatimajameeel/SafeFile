@@ -44,7 +44,7 @@ def login():
     # Redirect based on role
     if user["role_id"] == 1:
         # blueprint "soc", function "normal_scan"
-        return redirect(url_for("soc.normal_scan"))
+        return redirect(url_for("normal.normal_landing"))
     elif user["role_id"] == 2:
         # blueprint "soc", function "soc_home"
         return redirect(url_for("soc.soc_home"))

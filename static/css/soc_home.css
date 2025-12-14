@@ -1,0 +1,413 @@
+/* Overall page content area */
+.content {
+  padding: 26px 34px;
+}
+
+/* KPI section container */
+.kpi-section {
+  margin-top: 8px;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+/* Top header above cards */
+.kpi-header {
+  margin-bottom: 16px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2b0f80; 
+}
+
+.kpi-period {
+  margin: 40px 0 0 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: #8987b6;
+}
+
+
+/* Grid of cards (responsive) */
+.kpi-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+/* Base card style */
+.kpi-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(182, 158, 255, 0.15);
+  border: 1px solid rgba(182, 158, 255, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 107, 53, 0.4); 
+  box-shadow: 0 12px 30px rgba(182, 158, 255, 0.25);
+}
+
+
+
+/* Left side of card */
+.kpi-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Title text (e.g. "Total Files Scanned") */
+.kpi-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color:#2b0f80;
+}
+
+/* Subtitle (time range) */
+.kpi-subtitle {
+  margin: 0;
+  font-size: 11px;
+  color: #a0a0c0;
+}
+
+/* Big main number */
+.kpi-value {
+  margin: 4px 0 0 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #634ea3;
+}
+
+/* Trend line under the value */
+.kpi-trend {
+  margin-top: 6px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #8a88b3;
+}
+
+/* Arrow styles */
+.kpi-trend-arrow {
+  font-size: 11px;
+}
+
+/* Colors for arrows */
+.kpi-trend-arrow.up {
+  color: #0f9d58; /* green-ish */
+}
+
+.kpi-trend-arrow.down {
+  color: #d93025; /* red-ish */
+}
+
+.kpi-trend-arrow.neutral {
+  color: #b0b0cc;
+}
+
+/* Percent value text */
+.kpi-trend-value {
+  font-weight: 600;
+}
+
+/* When there's no previous data */
+.kpi-trend-label.no-data {
+  color: #b0b0cc;
+}
+
+/* Right-side icon pill wrapper */
+.kpi-icon-wrapper {
+  flex-shrink: 0;
+}
+
+/* Icon pill itself */
+.kpi-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Base icon style */
+.icon-img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.95;
+}
+
+.icon-img-s {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  opacity: 0.95;
+}
+
+
+
+
+/* ORANGE — for TOTAL FILES */
+.kpi-total .icon-img-s {
+  filter: invert(53%) sepia(92%) saturate(2517%) hue-rotate(359deg) brightness(101%) contrast(101%);
+}
+
+/* GREEN — for SAFE FILES */
+.kpi-safe .icon-img {
+  filter: invert(58%) sepia(92%) saturate(560%) hue-rotate(84deg) brightness(93%) contrast(104%);
+}
+
+/* YELLOW — for SUSPICIOUS */
+.kpi-suspicious .icon-img-s {
+    filter: invert(75%) sepia(98%) saturate(2700%) hue-rotate(10deg) brightness(85%) contrast(125%);
+}
+
+/* RED — for MALICIOUS */
+.kpi-malicious .icon-img-s {
+  filter: invert(28%) sepia(95%) saturate(6060%) hue-rotate(346deg) brightness(89%) contrast(118%);
+}
+
+/* PURPLE — DETECTION RATE */
+.kpi-detection_rate .icon-img {
+  filter: invert(42%) sepia(96%) saturate(748%) hue-rotate(218deg) brightness(93%) contrast(101%);
+}
+
+
+
+/* Different soft background colors per card type */
+
+.kpi-total .kpi-icon {
+  background: rgba(255, 159, 67, 0.15);   /* soft orange */
+  color: #ff7a45;
+}
+
+.kpi-safe .kpi-icon {
+  background: rgba(52, 199, 89, 0.15);    /* soft green */
+  color: #34c759;
+}
+
+.kpi-suspicious .kpi-icon {
+  background: rgba(255, 204, 0, 0.18);    /* soft yellow */
+  color: #ff9500;
+}
+
+.kpi-malicious .kpi-icon {
+  background: rgba(255, 59, 48, 0.16);    /* soft red */
+  color: #ff3b30;
+}
+
+.kpi-detection_rate .kpi-icon {
+  background: rgba(88, 86, 214, 0.16);    /* soft purple */
+  color: #5856d6;
+}
+
+/* Small screen tweaks */
+@media (max-width: 768px) {
+  .content {
+    padding: 16px;
+  }
+
+  .kpi-card {
+    padding: 14px 16px;
+  }
+
+  .kpi-value {
+    font-size: 22px;
+  }
+}
+
+
+/*-------------------- Chart section under the KPIs ------------------------------ */
+
+.chart-section {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  margin-left: 50px;
+  margin-right: 50px;   /* same as KPI section */
+}
+/* Row that holds both cards */
+.charts-row {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* Line chart card = 65% width */
+.chart-card.line-card {
+  flex: 1.70;
+  margin-right: 20px;
+}
+
+/* Pie chart card = 35% width */
+.chart-card.verdict-card {
+  flex: 1;
+}
+
+/* The card that holds each chart */
+.chart-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 10px 30px rgba(182, 158, 255, 0.18);
+  border: 1px solid rgba(182, 158, 255, 0.2);
+}
+/* Header (title + legend) */
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.chart-title {
+  margin: 0;
+  padding-bottom: 5px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2b0f80;
+}
+
+.chart-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #8987b6;
+}
+
+/* Legend dots on the right */
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 14px;
+  color: #6b6a8c;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.legend-dot.alerts {
+  background: #ff6b35;            /* orange */
+}
+
+.legend-dot.total {
+  background: #5856d6;            /* purple */
+}
+
+/* Chart body container controls the height */
+.chart-body {
+  margin-top: 8px;
+  height: 210px;                  /* adjust this to make chart taller/shorter */
+}
+
+/* Make the canvas fill the card body */
+.chart-body canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Slightly smaller on mobile */
+@media (max-width: 768px) {
+  .chart-card {
+    max-width: 100%;
+    padding: 16px 18px;
+  }
+
+  .chart-body {
+    height: 220px;
+  }
+
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+
+
+
+/*-------------- Secondary chart section ------------------ */
+.secondary-charts {
+  margin-top: 40px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 40px;
+}
+
+
+/* Pie vs YARA width ratio */
+.secondary-charts .pie-card {
+  flex: 0.35;   /* slightly smaller */
+}
+
+.secondary-charts .yara-card {
+  flex: 0.7;   /* slightly bigger */
+  margin-left: 25px;
+}
+
+/* Pie chart stays normal */
+.small-pie .pie-body {
+  height: 220px !important;
+}
+
+/* YARA chart width + height */
+.yara-card .chart-body {
+  height: 260px;
+  max-width: 600px;   /* let it be wider */
+  margin: 0 auto;
+}
+
+/* -------- Activity Breakdown section (Daily Volume + File Types) --------------- */
+.activity-breakdown {
+  margin-top: 40px;
+  margin-left: 40px;
+  margin-right: 40px;
+  margin-bottom: 40px;
+}
+
+
+.volume-card {
+  flex: 1; 
+  margin-left: auto;
+  margin-right: auto;    
+}
+
+
+/* .filetype-card {
+  flex: 0.8;    
+} */
+
+/* Daily Upload Volume horizontal bar height */
+.volume-card .volume-body {
+  height: 260px !important;
+}
+
+/* File Types chart height */
+.filetype-card .filetype-body {
+  height: 260px;
+}
+

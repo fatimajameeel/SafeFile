@@ -1,0 +1,172 @@
+/*  monospace font for logs */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+
+.log-row,
+.log-timestamp,
+.log-severity-pill,
+.log-message {
+  font-family: "JetBrains Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
+
+
+/* ========= LOGS PANEL CONTAINER ========= */
+.logs-container {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 0;
+  max-width: 1200px;
+  margin: 10px auto;
+  overflow: hidden;
+  box-shadow: 0px 10px 40px rgba(111, 64, 215, 0.15);
+}
+
+/* ========= HEADER ========= */
+.logs-header {
+  padding: 22px 28px 22px 28px;
+  background: #ffffff;
+}
+
+.logs-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.logs-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #3d2c7b;
+  margin: 0;
+}
+
+/* ========= DARK LOG BODY ========= */
+.logs-body {
+  background: #0b1221;;
+  padding: 20px 0;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* Scrollbar */
+.logs-body::-webkit-scrollbar {
+  width: 6px;
+}
+.logs-body::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}
+
+/* ========= LOG ROW ========= */
+.logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 20px;
+}
+
+.log-row {
+  background: #0b1221;
+  padding: 10px 14px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  transition:  0.2s ease, transform 0.15s ease;
+}
+
+/* HOVER EFFECT */
+.log-row:hover {
+  background: #1e293b;
+}
+
+/* Timestamp */
+.log-timestamp {
+  color: #9ca3af;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Severity pill */
+.log-severity-pill {
+  padding: 3px 10px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Severity Variants */
+.log-severity-info .log-severity-pill {
+  background: #4b5563;
+  color: #e5e7eb;
+}
+.log-severity-warning .log-severity-pill {
+  background: #ef4444;
+  color: #111827;
+}
+.log-severity-error .log-severity-pill {
+  background: #f97316;
+  color: #111827;
+}
+
+/* Log message */
+.log-message {
+  color: #e5e7eb;
+  font-size: 14px;
+letter-spacing: 0.2px;
+
+}
+
+/* ========= FOOTER ========= */
+.logs-footer {
+  background: #f8faff;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5e7eb;
+}
+
+.logs-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* Colored severity dots */
+.footer-sev {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.footer-info {
+  background: #4b5563;
+}
+.footer-warning {
+  background: #ef4444;
+}
+.footer-error {
+  background: #f97316;
+}
+
+.logs-footer-right {
+  font-size: 13px;
+  color: #374151;
+}
+
+
+/* 
+.footer-warning {
+  background: #f97316;
+}
+.footer-error {
+  background: #ef4444;
+} */

@@ -42,9 +42,10 @@ body {
   text-decoration: none;
   color: #555;
   margin: 0 35px;
-  font-weight: 500;
+  font-weight: 550;
   position: relative;
   transition: color .2s ease;
+  font-size: 18px;
 }
 
 .nav-links a:hover {
@@ -70,19 +71,6 @@ body {
   justify-content: flex-end;
 }
 
-/* container for both logo images */
-.logo-combo {
-  display: flex;
-  align-items: center;
-  flex-direction: row;   /* ensure they stay side by side */
-  gap: 4px;              /* space between the icon and text */
-}
-
-/* first image (bug/folder icon) */
-.logo-combo .icon {
-  width: 60px;
-  height: auto;
-}
 
 /* second image (SafeFile text) */
 .logo-combo .logo-text {

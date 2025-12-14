@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeFile - History</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
+
+</head>
+
+<body>
+    <!-- Simple topbar -->
+    <header class="topbar">
+        <div class="left">
+        <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
+        <nav class="nav-links">
+            <a href="{{ url_for('normal.normal_landing') }}" >Home</a>
+            <a href="{{ url_for('normal.normal_scan') }}" >Scan</a>
+            <a href="{{ url_for('normal.normal_history') }}" class="active">History</a>
+        </nav>
+        </div>
+
+        <div class="right">
+    <div class="logo-combo">
+    
+        <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
+    </div>
+    </div>
+    </header>
+
+  <!-- Main content -->
+  <main class="user-main">
+    <h1>Welcome to SafeFile</h1>
+    <p>history page</p>
+  </main>
+</body>
+</html>
