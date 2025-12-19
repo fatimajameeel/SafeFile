@@ -6,33 +6,126 @@
   <title>SafeFile - History</title>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
-
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/normal_history.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Simple topbar -->
-    <header class="topbar">
-        <div class="left">
-        <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
-        <nav class="nav-links">
-            <a href="{{ url_for('normal.normal_landing') }}" >Home</a>
-            <a href="{{ url_for('normal.normal_scan') }}" >Scan</a>
-            <a href="{{ url_for('normal.normal_history') }}" class="active">History</a>
-        </nav>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="left">
+      <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
+      <nav class="nav-links">
+        <a href="{{ url_for('normal.normal_landing') }}">Home</a>
+        <a href="{{ url_for('normal.normal_history') }}" class="active">History</a>
+      </nav>
+    </div>
+
+    <div class="right">
+      <div class="logo-combo">
+        <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <!-- History Card -->
+    <section class="history-card">
+      <header class="history-header">
+        <h1 class="history-title">Scan History</h1>
+      </header>
+
+      <!-- Filters row -->
+      <form method="get" class="history-filters">
+        <div class="history-search">
+          <input
+            type="text"
+            name="q"
+            value="{{ q }}"
+            placeholder="Search by file name..."
+            class="history-search-input"
+            id="historySearch"
+          />
+
         </div>
 
-        <div class="right">
-    <div class="logo-combo">
-    
-        <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
-    </div>
-    </div>
-    </header>
+        <div class="history-verdict-filter">
+          <select
+            name="verdict"
+            class="history-verdict-select"
+            onchange="this.form.submit()"
+          >
+            <option value="all" {% if verdict_filter == 'all' %}selected{% endif %}>All verdicts</option>
+            <option value="benign" {% if verdict_filter == 'benign' %}selected{% endif %}>Benign</option>
+            <option value="suspicious" {% if verdict_filter == 'suspicious' %}selected{% endif %}>Suspicious</option>
+            <option value="malicious" {% if verdict_filter == 'malicious' %}selected{% endif %}>Malicious</option>
+          </select>
 
-  <!-- Main content -->
-  <main class="user-main">
-    <h1>Welcome to SafeFile</h1>
-    <p>history page</p>
+        </div>
+      </form>
+
+      <!-- Table -->
+      <div class="history-table-wrapper">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>File Name</th>
+              <th>Date</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% if rows %}
+              {% for row in rows %}
+                {% set verdict_raw = row["final_verdict"] %}
+                {% set v = (verdict_raw or "unknown")|lower %}
+                <tr>
+                  <td>{{ row["file_name"] }}</td>
+                  <td>{{ row["timestamp"] }}</td>
+                  <td>
+                    <span
+                      class="verdict-pill
+                        {% if v == 'benign' %}pill-benign
+                        {% elif v == 'suspicious' %}pill-suspicious
+                        {% elif v == 'malicious' %}pill-malicious
+                        {% else %}pill-unknown{% endif %}">
+                      {{ v|capitalize }}
+                    </span>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="3" class="history-empty">
+                  No scan records yet.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="history-footer">
+        <p>Showing {{ showing_count }} records</p>
+      </footer>
+    </section>
+
   </main>
+  <script>
+  const searchInput = document.getElementById("historySearch");
+  let timer;
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        searchInput.form.submit();
+      }, 500); // submit 0.4s after they stop typing
+    });
+  }
+</script>
+
 </body>
 </html>

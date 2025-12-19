@@ -6,107 +6,366 @@
   <title>SafeFile - Normal User</title>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
-
   <link rel="stylesheet" href="{{ url_for('static', filename='css/normal_landing.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
-
 </head>
 
 <body class="normal-landing">
+
   <!-- Simple topbar -->
   <header class="topbar normal-topbar">
     <div class="left">
       <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
       <nav class="nav-links">
         <a href="{{ url_for('normal.normal_landing') }}" class="active">Home</a>
-        <a href="{{ url_for('normal.normal_scan') }}">Scan</a>
         <a href="{{ url_for('normal.normal_history') }}">History</a>
       </nav>
     </div>
 
     <div class="right">
       <div class="logo-combo">
-        <img src="{{ url_for('static', filename='img/text-logo.png') }}" 
-             alt="SafeFile logo text" 
+        <img src="{{ url_for('static', filename='img/text-logo.png') }}"
+             alt="SafeFile logo text"
              class="logo-text">
       </div>
     </div>
   </header>
 
   <!-- Main content -->
-<main class="normal-main">
-  <!--- ----------------------- TOP HERO SECTION ---------------------------------------------->
-  <section class="hero-section">
-    <!-- Logo icon + text together -->
-    <div class="hero-logo">
-      <img
-        src="{{ url_for('static', filename='img/small_logo.png') }}"
-        alt="SafeFile icon"
-        class="hero-logo-icon"
-      >
-      <img
-        src="{{ url_for('static', filename='img/text-logo.png') }}"
-        alt="SafeFile"
-        class="hero-logo-text"
-      >
+  <main class="normal-main">
+
+    <!-- ----------------------- TOP HERO SECTION ----------------------- -->
+    <section class="hero-section">
+      <div class="hero-logo">
+        <img
+          src="{{ url_for('static', filename='img/small_logo.png') }}"
+          alt="SafeFile icon"
+          class="hero-logo-icon"
+        >
+        <img
+          src="{{ url_for('static', filename='img/text-logo.png') }}"
+          alt="SafeFile"
+          class="hero-logo-text"
+        >
+      </div>
+
+      <p class="hero-tagline">
+        Easily scan your files and folders for potential risks.
+      </p>
+    </section>
+
+    <!-- ----------------------- UPLOAD CARD SECTION ----------------------- -->
+    <section class="upload-section">
+      <div class="upload-card">
+
+        <div class="upload-dropzone">
+          <div class="upload-inner">
+            <div class="upload-icon-wrapper">
+              <img
+                src="{{ url_for('static', filename='img/upload.png') }}"
+                alt="Upload icon"
+                class="upload-icon"
+              >
+            </div>
+            <p class="upload-title">Drop your file here</p>
+            <p class="upload-subtitle">or choose an option below</p>
+          </div>
+        </div>
+            <!-- Hidden drop upload form -->
+             <form method="POST"
+                action="{{ url_for('normal.normal_landing') }}"
+                enctype="multipart/form-data"
+                id="dropForm"
+                style="display:none;">
+            <input type="file" id="dropInput" name="single_files" multiple>
+          </form>
+        <div class="upload-actions">
+
+          <!-- FILE UPLOAD -->
+          <form method="POST" enctype="multipart/form-data" id="fileForm">
+            <label class="upload-btn file-btn">
+              <input id="fileInput" type="file" name="single_files" multiple hidden>
+              <svg class="btn-icon" viewBox="0 0 24 24">
+                <path d="M12 3v12m0-12l-4 4m4-4l4 4M5 21h14a2 2 0 0 0 2-2v-5H3v5a2 2 0 0 0 2 2z"
+                      stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Scan File
+            </label>
+          </form>
+
+          <!-- FOLDER UPLOAD -->
+          <form method="POST" enctype="multipart/form-data" id="folderForm">
+            <label class="upload-btn folder-btn">
+              <input id="folderInput" type="file" name="folder_files" webkitdirectory hidden>
+              <svg class="btn-icon" viewBox="0 0 24 24">
+                <path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"
+                      stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Upload Folder
+            </label>
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- -------------------- ERROR MESSAGE -------------------- -->
+    {% if error_message %}
+      <div class="result-alert">
+        {{ error_message }}
+      </div>
+    {% endif %}
+
+     <!----------------------- LOADING MESSAGE  ----------------------->
+      <div id="scanOverlay" class="scan-overlay" hidden>
+        <div class="scan-box">
+          <div class="spinner"></div>
+          <p class="scan-title">Scanning…</p>
+          <p class="scan-sub">This may take a few seconds.</p>
+       </div>
     </div>
 
-    <!------------------- Tagline under the logo ------------------>
-    <p class="hero-tagline">
-      Easily scan your files and folders for potential risks.
-    </p>
-  </section>
 
-    <!--------------------------------- UPLOAD CARD SECTION----------------------------- -->
-  <section class="upload-section">
-    <div class="upload-card">
-      <!---------------------- Drag & drop area ------------------------->
-      <div class="upload-dropzone">
-        <div class="upload-inner">
-          <div class="upload-icon-wrapper">
+      <!-- ---------------------- LAST SCAN ---------------------------- -->
+        {% if last_scan %}
+  <section class="lastscan-section">
+    <div class="lastscan-card">
+
+      <div class="lastscan-left">
+        <div class="lastscan-icon {{ last_scan.verdict.css }}">
+          <img
+            src="{{ url_for('static', filename=last_scan.verdict.icon) }}"
+            alt=""
+          >
+        </div>
+
+        <div class="lastscan-info">
+          <h3 class="lastscan-title">Last Scan</h3>
+
+          <p class="lastscan-file">
+            <span class="lastscan-name">{{ last_scan.file_name }}</span>
+            <span class="lastscan-dash">-</span>
+            <span class="lastscan-verdict {{ last_scan.verdict.css }}">
+              {{ last_scan.verdict.label }}
+            </span>
+          </p>
+          <p class="lastscan-time">
             <img
-              src="{{ url_for('static', filename='img/upload.png') }}"
-              alt="Upload icon"
-              class="upload-icon"
+              src="{{ url_for('static', filename='img/clock.png') }}"
+              alt="Time"
+              class="lastscan-clock-icon"
             >
-          </div>
-          <p class="upload-title">Drop your file here</p>
-          <p class="upload-subtitle">or choose an option below</p>
+            <span>{{ last_scan.time_ago }}</span>
+          </p>
+
         </div>
       </div>
 
-      <!-- Buttons under the dropzone -->
-<div class="upload-actions">
+    <a
+      class="lastscan-btn"
+      href="{{ url_for('normal.normal_history') }}"
+    >
+      View Details
+    </a>
 
-        <!-- FILE UPLOAD BUTTON -->
-        <form method="POST" enctype="multipart/form-data" id="fileForm">
-         <label class="upload-btn file-btn">
-          <input type="file" name="single_files" multiple hidden onchange="document.getElementById('fileForm').submit();">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-             <path d="M12 3v12m0-12l-4 4m4-4l4 4M5 21h14a2 2 0 0 0 2-2v-5H3v5a2 2 0 0 0 2 2z"
-             stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-               Upload File
-          </label>
-        </form>
+  </div>
+</section>
+{% endif %}
 
-        <!-- FOLDER UPLOAD BUTTON -->
-        <form method="POST" enctype="multipart/form-data" id="folderForm">
-         <label class="upload-btn folder-btn">
-          <input type="file" name="folder_files" webkitdirectory hidden onchange="document.getElementById('folderForm').submit();">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-             <path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke-width="2" fill="none"
-              stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-               Upload Folder
-         </label>
-        </form>
+
+
+    <!-- -------------------- SINGLE FILE RESULT (TABLE) -------------------- -->
+    {% if scan_mode == "file" and single_result %}
+      <section class="result-section">
+        <div class="result-card">
+          <h2 class="result-heading">Scan Result</h2>
+
+          <div class="table-wrap">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Declared Type</th>
+                  <th>Detected (Real) Type</th>
+                  <th>Final Verdict</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="file-col">{{ single_result.file_name }}</td>
+                  <td>{{ single_result.declared_type }}</td>
+                  <td>
+                    {{ single_result.detected_type }}
+                    {% if single_result.mismatch %}
+                      <span class="pill-mismatch">Mismatch</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="verdict-pill {{ single_result.verdict.css }}">
+                      <img class="pill-icon"
+                           src="{{ url_for('static', filename=single_result.verdict.icon) }}"
+                           alt="">
+                      {{ single_result.verdict.label }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Friendly message under the table -->
+          <p class="verdict-note">{{ single_result.verdict.message }}</p>
+
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- -------------------- FOLDER RESULT (SUMMARY + TABLE) -------------------- -->
+    {% if scan_mode == "folder" and folder_summary %}
+      <section class="result-section">
+        <div class="result-card">
+
+          <h2 class="result-heading">Folder Scan Results</h2>
+
+          <div class="folder-summary">
+            <div class="sum-chip total">
+              <img class="sum-icon" src="{{ url_for('static', filename='img/icons/shield.png') }}" alt="">
+              <div>
+                <p class="sum-title">Total</p>
+                <p class="sum-value">{{ folder_summary.total }}</p>
+              </div>
+            </div>
+
+            <div class="sum-chip safe">
+              <img class="sum-icon" src="{{ url_for('static', filename='img/icons/checked.png') }}" alt="">
+              <div>
+                <p class="sum-title">Safe</p>
+                <p class="sum-value">{{ folder_summary.safe }}</p>
+              </div>
+            </div>
+
+            <div class="sum-chip suspicious">
+              <img class="sum-icon" src="{{ url_for('static', filename='img/icons/warning.png') }}" alt="">
+              <div>
+                <p class="sum-title">Suspicious</p>
+                <p class="sum-value">{{ folder_summary.suspicious }}</p>
+              </div>
+            </div>
+
+            <div class="sum-chip malicious">
+              <img class="sum-icon" src="{{ url_for('static', filename='img/icons/cross.png') }}" alt="">
+              <div>
+                <p class="sum-title">Malicious</p>
+                <p class="sum-value">{{ folder_summary.malicious }}</p>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="table-wrap">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Declared Type</th>
+                  <th>Detected (Real) Type</th>
+                  <th>Final Verdict</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in folder_results %}
+                  <tr>
+                    <td class="file-col">{{ row.file_name }}</td>
+                    <td>{{ row.declared_type }}</td>
+                    <td>
+                      {{ row.detected_type }}
+                      {% if row.mismatch %}
+                        <span class="pill-mismatch">Mismatch</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <span class="verdict-pill {{ row.verdict.css }}">
+                        <img class="pill-icon"
+                             src="{{ url_for('static', filename=row.verdict.icon) }}"
+                             alt="">
+                        {{ row.verdict.label }}
+                      </span>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+    {% endif %}
+
+    <!-- -------------------- HELP SECTION: MEANINGS + TIPS -------------------- -->
+<section class="help-section">
+
+  <!-- What do these results mean? -->
+  <div class="help-card">
+    <div class="help-title">
+      <img class="help-title-icon" src="{{ url_for('static', filename='img/icons/danger.png') }}" alt="">
+      <h3>What do these results mean?</h3>
+    </div>
+
+    <div class="meaning-grid">
+      <!-- Safe -->
+      <div class="meaning-box meaning-safe">
+        <div class="meaning-head">
+          <img class="meaning-icon" src="{{ url_for('static', filename='img/icons/checked.png') }}" alt="">
+          <span class="meaning-label">Safe</span>
+        </div>
+        <p class="meaning-text">
+          No threats detected. The file is clean and safe to use.
+        </p>
+      </div>
+
+      <!-- Suspicious -->
+      <div class="meaning-box meaning-suspicious">
+        <div class="meaning-head">
+          <img class="meaning-icon" src="{{ url_for('static', filename='img/icons/warning.png') }}" alt="">
+          <span class="meaning-label">Suspicious</span>
+        </div>
+        <p class="meaning-text">
+          Something unusual was found. Use caution before opening.
+        </p>
+      </div>
+
+      <!-- Malicious -->
+      <div class="meaning-box meaning-malicious">
+        <div class="meaning-head">
+          <img class="meaning-icon" src="{{ url_for('static', filename='img/icons/cross.png') }}" alt="">
+          <span class="meaning-label">Malicious</span>
+        </div>
+        <p class="meaning-text">
+          This file appears harmful. Do not open it.
+        </p>
       </div>
     </div>
-  </section>
+  </div>
+
+  <!-- Safety Tips -->
+  <div class="tips-card">
+    <div class="tips-title">
+      <img class="tips-icon" src="{{ url_for('static', filename='img/icons/bulb.png') }}" alt="">
+      <h3>Safety Tips</h3>
+    </div>
+
+    <ul class="tips-list">
+      <li>Avoid opening files marked as malicious. Delete them immediately.</li>
+      <li>Be cautious with files from unknown senders or untrusted sources.</li>
+      <li>Rescan files if you’re unsure or if they came from a suspicious email.</li>
+    </ul>
+  </div>
+
+</section>
 
 
-</main>
+  </main>
+    <script defer src="{{ url_for('static', filename='js/normal_upload_loading.js') }}"></script>
 
 </body>
 </html>

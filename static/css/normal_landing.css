@@ -1,76 +1,48 @@
-/* Overall page background & font */
+/* ======================================================================
+   Normal Landing Page (Normal User) - Clean CSS
+   Matches: normal_landing.html
+   ====================================================================== */
+
+/* -------------------- Page Base -------------------- */
 .normal-landing {
-  background-color: #F9F7FF;              
-  color: #2D0A72;                         /* deep purple for headings */
+  background: #F9F7FF;
+  color: #2D0A72;
 }
 
-/* ------------------------- START   (logo + tagline) ------------------------- */
-
+/* -------------------- Hero (Logo + Tagline) -------------------- */
 .hero-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   margin-top: 60px;
-  margin-bottom: 32px;              /* space before the next section */
+  margin-bottom: 32px;
 }
 
-/* container that holds icon + text logo side-by-side */
 .hero-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;                         /* space between icon & text */
+  gap: 10px;
   margin-bottom: 8px;
 }
 
-/* the folder+bug icon */
 .hero-logo-icon {
-  height: 150px;                   
+  height: 130px;
   width: auto;
 }
 
-/* the SafeFile text image */
 .hero-logo-text {
-  height: 100px;                      
+  height: 80px;
   width: auto;
 }
 
-/* tagline under the logo */
 .hero-tagline {
   font-size: 22px;
   color: #6f6f8f;
 }
 
-
-  /* .scan-btn {
-  display: inline-block;
-  background: #f0eaff;
-  color: #4b2ca7;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: 1px solid #cbb8ff;
-  text-decoration: none;
-  font-weight: 550;
-  transition: 0.3s ease;
-  font-size: 18px;
-}
-
-.scan-btn:hover {
-  background: linear-gradient(90deg, #ff7b4f, #5924d0);
-  border: 2px solid #ff7b4f;
-  color: white;
-  transform: translateY(-2px) ease;
-transition: 0.3s ease;
-
-} */
-
-
-
-/* ------------------------- END (logo + tagline) ------------------------- */
-
-/* ---------- Upload card (outer container) ---------- */
-
+/* -------------------- Upload Card -------------------- */
 .upload-section {
   display: flex;
   justify-content: center;
@@ -78,25 +50,36 @@ transition: 0.3s ease;
 }
 
 .upload-card {
-  background-color: #ffffff;
+  background: #ffffff;
   border-radius: 28px;
   padding: 32px 40px 28px;
-  max-width: 840px;
+  max-width: 1000px;
   width: 100%;
   box-shadow: 0 24px 70px rgba(148, 115, 255, 0.28);
   border: 1px solid rgba(197, 176, 255, 0.6);
 }
 
-
-/* Inner dashed drop area */
-
+/* Drag & Drop Box */
 .upload-dropzone {
   border: 3.6px dashed #e0d4ff;
   border-radius: 22px;
   padding: 44px 20px;
   background: #ffffff;
-  transition: all 0.25s ease;
+  transition: 0.25s ease;
 }
+
+.upload-dropzone:hover {
+  border-color: #9a79ed;
+  background: #F9F7FF;
+}
+
+/* Dragging state */
+.upload-dropzone.is-dragover {
+  border-color: #7503C0;
+  background: #F3EEFF;
+  transform: scale(1.01);
+}
+
 
 .upload-inner {
   display: flex;
@@ -104,8 +87,6 @@ transition: 0.3s ease;
   align-items: center;
   text-align: center;
 }
-
-/* Icon background inside the dropzone */
 
 .upload-icon-wrapper {
   width: 72px;
@@ -116,7 +97,6 @@ transition: 0.3s ease;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  transition: all 0.25s ease;
 }
 
 .upload-icon {
@@ -124,77 +104,715 @@ transition: 0.3s ease;
   height: 60px;
 }
 
-/* Text inside drop area */
-
 .upload-title {
   font-size: 22px;
   font-weight: 650;
   color: #3c228b;
-  margin-bottom: 4px;
+  margin: 0 0 4px;
 }
 
 .upload-subtitle {
   font-size: 18px;
   color: #8e8ea8;
+  margin: 0;
 }
 
-/*  Hover effect: border */
-
-.upload-dropzone:hover {
-  border: 3.6px dashed #9a79ed;
-  background: #F9F7FF;
-  transition: all 0.25s ease;
-
-}
-
- /* Buttons row under dropzone */
-
+/* Upload Buttons */
 .upload-actions {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 30px;
+  align-items: center;
   margin-top: 24px;
 }
 
-/* Base style for both buttons */
-/* layout of the two buttons */
-.upload-actions {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-}
-
-/* MAIN BUTTON STYLE */
 .upload-btn {
   border: 2px solid #7503C0;
-  color: #fff;
-  background:   #7503C0;
-  display: flex;
+  background: #7503C0;
+  color: #ffffff;
+  display: inline-flex;
   align-items: center;
+  gap: 10px;
   padding: 18px 60px;
   font-size: 20px;
   font-weight: 600;
   border-radius: 20px;
   cursor: pointer;
   transition: 0.3s ease;
-  margin-top:20px;
 }
 
-/* Hover effect */
 .upload-btn:hover {
   background: linear-gradient(90deg, #ff7b4f, #5924d0);
-  border: 2px solid #ff7b4f;
-  color: white;
+  border-color: #ff7b4f;
   transform: translateY(-2px);
 }
 
 .btn-icon {
   width: 20px;
   height: 20px;
-  transition: 0.3s;
-   stroke: white;
+  stroke: #ffffff;
 }
 
-.upload-btn:hover .btn-icon path {
-  stroke: white;
+/* -------------------- Error Message -------------------- */
+.result-alert {
+  max-width: 840px;
+  margin: 18px auto;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: #fff1f1;
+  border: 1px solid #ffcccc;
+  color: #b91c1c;
+  font-weight: 500;
+}
+
+/* -------------------- Results Card -------------------- */
+.result-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+}
+
+.result-card {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 28px 32px;
+  max-width: 1000px;
+  width: 100%;
+  box-shadow: 0 24px 70px rgba(148, 115, 255, 0.18);
+  border: 1px solid rgba(197, 176, 255, 0.55);
+  overflow: hidden; /* important so the header gradient corners look clean */
+}
+
+.result-heading {
+  font-size: 22px;
+  margin: 0 0 18px;
+  color: #2D0A72;
+}
+
+.verdict-note {
+  margin: 14px 0 0;
+  color: #3b3b63;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* -------------------- Folder Summary Chips -------------------- */
+.folder-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.sum-chip {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  border-radius: 18px;
+  padding: 16px 18px;
+  background: #fbf9ff;
+  border: 1px solid rgba(197, 176, 255, 0.65);
+}
+
+.sum-icon {
+  width: 34px;
+  height: 34px;
+  margin-top: -3px; 
+}
+
+.sum-title {
+  margin: 0;
+  color: #69698d;
+  font-size: 18px;
+}
+
+.sum-value {
+  margin: 6px 0 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: #2D0A72;
+}
+
+/* colored chip styles */
+.sum-chip.safe {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+}
+.sum-chip.suspicious {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+.sum-chip.malicious {
+  background: #fff1f2;
+  border-color: #fecdd3;
+}
+
+/* SAFE — green */
+.sum-chip.safe .sum-icon {
+  filter: invert(58%) sepia(92%) saturate(560%)
+          hue-rotate(84deg) brightness(93%) contrast(104%);
+}
+
+/* SUSPICIOUS — yellow */
+.sum-chip.suspicious .sum-icon {
+  filter: invert(75%) sepia(98%) saturate(2700%)
+          hue-rotate(10deg) brightness(85%) contrast(125%);
+}
+
+/* MALICIOUS — red */
+.sum-chip.malicious .sum-icon {
+  filter: invert(28%) sepia(95%) saturate(6060%)
+          hue-rotate(346deg) brightness(89%) contrast(118%);
+}
+
+/* TOTAL — neutral purple */
+.sum-chip.total .sum-icon {
+  filter: invert(42%) sepia(96%) saturate(748%)
+          hue-rotate(218deg) brightness(93%) contrast(101%);
+}
+/* -------------------- Results Table -------------------- */
+.table-wrap {
+  overflow-x: auto;
+}
+
+/* KEY: gradient should be continuous -> apply to thead row, not each th */
+.results-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* gradient bar across the whole header */
+.results-table thead tr {
+  background: linear-gradient(90deg, #2D0A72, #7b61d1);
+}
+
+/* header cells transparent so row gradient shows one bar */
+.results-table thead th {
+  background: transparent;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 16px 16px;
+  font-size: 16px;
+  text-align: left;
+  border: none;
+}
+
+/* rounded header corners */
+.results-table thead th:first-child {
+  border-top-left-radius: 16px;
+}
+.results-table thead th:last-child {
+  border-top-right-radius: 16px;
+}
+
+/* body cells: NO inner lines */
+.results-table tbody td {
+  padding: 18px 16px;
+  background: #ffffff;
+  font-size: 16px;
+  color: #1f1247;
+  border: none;
+}
+
+/* optional hover (no borders, just soft background) */
+.results-table tbody tr:hover td {
+  background: #f9f7ff;
+}
+
+/* file name style */
+.results-table tbody td.file-col {
+  font-weight: 700;
+  color: #2D0A72;
+  max-width: 360px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* keep table readable on small widths */
+.results-table th,
+.results-table td {
+  white-space: nowrap;
+}
+
+/* -------------------- Verdict Pill + Icons -------------------- */
+.verdict-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1px solid transparent;
+}
+
+.pill-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/*  verdict-safe / verdict-warning / verdict-danger / verdict-unknown */
+.verdict-pill.verdict-safe {
+  background: #e6faf1;
+  border-color: #b6f3cb;
+  color: #065f46;
+}
+
+.verdict-pill.verdict-warning {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.verdict-pill.verdict-danger {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #9f1239;
+}
+
+.verdict-pill.verdict-unknown {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #374151;
+}
+
+/* mismatch pill */
+.pill-mismatch {
+  margin-left: 10px;
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* -------------------- Responsive -------------------- */
+@media (max-width: 900px) {
+  .upload-card,
+  .result-card {
+    max-width: 92%;
+    padding: 22px;
+  }
+
+  .upload-actions {
+    flex-direction: column;
+  }
+
+  .upload-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .folder-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* -------------------- Scanning Overlay -------------------- */
+.scan-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 10, 50, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.scan-box {
+  background: #fff;
+  border-radius: 22px;
+  padding: 22px 26px;
+  width: min(420px, 92%);
+  box-shadow: 0 24px 70px rgba(148, 115, 255, 0.25);
+  border: 1px solid rgba(197, 176, 255, 0.55);
+  text-align: center;
+}
+
+.scan-title {
+  margin: 12px 0 4px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #2D0A72;
+}
+
+.scan-sub {
+  margin: 0;
+  color: #6f6f8f;
+  font-size: 14px;
+}
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 4px solid rgba(117, 3, 192, 0.2);
+  border-top-color: #7503C0;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* Make sure hidden works even if display is set in class */
+.scan-overlay[hidden] {
+  display: none !important;
+}
+
+
+ /* ------------------------- LAST SCAN ------------------------------------- */
+ /* Last scan time row */
+.lastscan-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #8b8bb0;
+}
+
+/* Clock icon */
+.lastscan-clock-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.8;
+}
+/* ------------------------LAST SCAN CARD ----------------------------------------- */
+
+.lastscan-section{
+  display: flex;
+  justify-content: center;
+  margin: 26px 0 34px;
+}
+
+.lastscan-card{
+  width: 100%;
+  max-width: 1100px;
+  background: #fff;
+  border-radius: 26px;
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 18px 55px rgba(148, 115, 255, 0.18);
+  border: 1px solid rgba(197, 176, 255, 0.45);
+}
+
+.lastscan-left{
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0; /* allows text to truncate nicely */
+}
+
+/* Icon box on the left */
+.lastscan-icon{
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: #E9FFF2;                 /* light green like figma */
+  border: 1px solid rgba(39, 174, 96, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+
+.lastscan-icon img{
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+/* Safe */
+.lastscan-icon.verdict-safe {
+  background: #e9fbf1;
+}
+
+.lastscan-icon.verdict-safe img {
+  filter: invert(42%) sepia(92%) saturate(560%)
+          hue-rotate(90deg) brightness(95%) contrast(105%);
+}
+
+/* Suspicious */
+.lastscan-icon.verdict-warning {
+  background: #fff7e6;
+}
+
+.lastscan-icon.verdict-warning img {
+  filter: invert(74%) sepia(95%) saturate(1200%)
+          hue-rotate(10deg) brightness(90%) contrast(110%);
+}
+
+/* Malicious */
+.lastscan-icon.verdict-danger {
+  background: #fdecec;
+}
+
+.lastscan-icon.verdict-danger img {
+  filter: invert(22%) sepia(95%) saturate(4500%)
+          hue-rotate(350deg) brightness(90%) contrast(120%);
+}
+
+/* Unknown */
+.lastscan-icon.verdict-unknown {
+  background: #f2f2f2;
+}
+
+.lastscan-icon.verdict-unknown img {
+  opacity: 0.7;
+}
+
+
+/* Text area */
+.lastscan-info{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.lastscan-title{
+  margin: 0;
+  font-size: 22px;
+  color: #2D0A72;
+  font-weight: 700;
+}
+
+.lastscan-file{
+  margin: 0;
+  font-size: 18px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.lastscan-name{
+  color: #2D0A72;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 520px;
+}
+
+.lastscan-dash{
+  color: #6f6f8f;
+}
+
+.lastscan-verdict{
+  font-weight: 650;
+}
+
+/* Color the verdict text */
+.lastscan-verdict.verdict-safe,
+.lastscan-verdict.pill-benign{
+  color: #1F9D57;
+}
+.lastscan-verdict.verdict-warning,
+.lastscan-verdict.pill-suspicious{
+  color: #C98A00;
+}
+.lastscan-verdict.verdict-danger,
+.lastscan-verdict.pill-malicious{
+  color: #D93025;
+}
+
+/* Clock row */
+.lastscan-time{
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8e8ea8;
+  font-size: 15px;
+}
+
+.lastscan-clock-icon{
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+/* Right button */
+.lastscan-btn{
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 16px;
+  font-weight: 700;
+  color: #2D0A72;
+  background: #fff;
+  border: 2px solid rgba(197, 176, 255, 0.9);
+  transition: 0.2s ease;
+  flex: 0 0 auto;
+}
+
+.lastscan-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(148, 115, 255, 0.18);
+  border-color: rgba(132, 90, 255, 0.95);
+}
+
+/* -------------------- HELP SECTION (MEANINGS + TIPS) -------------------- */
+
+.help-section{
+  max-width: 1160px;
+  margin: 26px auto 40px;
+  padding: 0 18px;
+}
+
+.help-card{
+  background: #ffffff;
+  border-radius: 26px;
+  padding: 22px 22px 18px;
+  border: 1px solid rgba(197, 176, 255, 0.55);
+  box-shadow: 0 24px 70px rgba(148, 115, 255, 0.18);
+}
+
+.help-title{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.help-title h3{
+  margin: 0;
+  font-size: 22px;
+  color: #2D0A72;
+  font-weight: 700;
+}
+
+.help-title-icon{
+  width: 24px;
+  height: 24px;
+  opacity: 0.9;
+}
+
+/* 3 mini meaning cards */
+.meaning-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.meaning-box{
+  border-radius: 16px;
+  padding: 14px 16px;
+  border: 1px solid transparent;
+}
+
+.meaning-head{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.meaning-icon{
+  width: 24px;
+  height: 24px;
+}
+
+.meaning-label{
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.meaning-text{
+  margin: 0;
+  font-size: 16px;
+  color: #565676;
+  line-height: 1.35;
+}
+
+/* Safe */
+.meaning-safe{
+  background: #E9FBF1;
+  border-color: rgba(76, 196, 133, 0.35);
+}
+.meaning-safe .meaning-label{ color: #1b8e57; }
+.meaning-safe .meaning-icon{
+  filter: invert(42%) sepia(92%) saturate(560%)
+          hue-rotate(90deg) brightness(95%) contrast(105%);
+}
+
+/* Suspicious */
+.meaning-suspicious{
+  background: #FFF7E6;
+  border-color: rgba(245, 184, 72, 0.45);
+}
+.meaning-suspicious .meaning-label{ color: #c57c00; }
+.meaning-suspicious .meaning-icon{
+  filter: invert(74%) sepia(95%) saturate(1200%)
+          hue-rotate(10deg) brightness(90%) contrast(110%);
+}
+
+/* Malicious */
+.meaning-malicious{
+  background: #FDECEC;
+  border-color: rgba(240, 88, 88, 0.40);
+}
+.meaning-malicious .meaning-label{ color: #d63b3b; }
+.meaning-malicious .meaning-icon{
+  filter: invert(22%) sepia(95%) saturate(4500%)
+          hue-rotate(350deg) brightness(90%) contrast(120%);
+}
+
+/* Tips card */
+.tips-card{
+  margin-top: 30px;
+  background: #FFF5EC;
+  border-radius: 22px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 170, 120, 0.55);
+}
+
+.tips-title{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.tips-title h3{
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2D0A72;
+
+}
+
+.tips-icon{
+  width: 26px;
+  height: 26px;
+  opacity: 0.95;
+}
+
+.tips-list{
+  margin: 0;
+  padding-left: 18px;
+  color: #464668;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.tips-list li{
+  margin: 6px 0;
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .meaning-grid{ grid-template-columns: 1fr; }
+}
+
+h3{
+  font-family: "Orbitron", system-ui, -apple-system, "Segoe UI", sans-serif;
 }

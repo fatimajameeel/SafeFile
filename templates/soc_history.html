@@ -6,6 +6,8 @@
   <title>SafeFile SOC Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_history.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
 
 </head>
 <body>
@@ -42,6 +44,7 @@
         <div class="history-search">
           <input
             type="text"
+            id="historySearch"
             name="q"
             value="{{ q }}"
             placeholder="Search by file name or uploader..."
@@ -51,13 +54,16 @@
 
         <!-- Verdict dropdown -->
         <div class="history-verdict-filter">
-          <select name="verdict" class="history-verdict-select">
+          <select
+            name="verdict"
+            class="history-verdict-select"
+            onchange="this.form.submit()"
+          >
             <option value="all" {% if verdict_filter == 'all' %}selected{% endif %}>All verdicts</option>
             <option value="benign" {% if verdict_filter == 'benign' %}selected{% endif %}>Benign</option>
             <option value="suspicious" {% if verdict_filter == 'suspicious' %}selected{% endif %}>Suspicious</option>
             <option value="malicious" {% if verdict_filter == 'malicious' %}selected{% endif %}>Malicious</option>
           </select>
-
         </div>
       </form>
 
@@ -112,5 +118,20 @@
     </section>
 
   </main>
+  <script>
+  (function () {
+    const input = document.getElementById("historySearch");
+    if (!input) return;
+
+    let timer;
+    input.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        input.form.submit();
+      }, 500); // submit after user stops typing
+    });
+  })();
+</script>
+
 </body>
 </html>
