@@ -8,28 +8,36 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/normal_landing.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script  defer src="{{ url_for('static', filename='js/logout_confirm.js') }}"></script>
+
 </head>
 
 <body class="normal-landing">
 
   <!-- Simple topbar -->
-  <header class="topbar normal-topbar">
-    <div class="left">
-      <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
-      <nav class="nav-links">
-        <a href="{{ url_for('normal.normal_landing') }}" class="active">Home</a>
-        <a href="{{ url_for('normal.normal_history') }}">History</a>
-      </nav>
+<header class="topbar normal-topbar">
+  <div class="left">
+    <div class="logo-combo">
+      <img src="{{ url_for('static', filename='img/text-logo.png') }}"
+           alt="SafeFile logo text"
+           class="logo-text">
     </div>
 
-    <div class="right">
-      <div class="logo-combo">
-        <img src="{{ url_for('static', filename='img/text-logo.png') }}"
-             alt="SafeFile logo text"
-             class="logo-text">
-      </div>
-    </div>
-  </header>
+    <nav class="nav-links">
+      <a href="{{ url_for('normal.normal_landing') }}" class="active">Home</a>
+      <a href="{{ url_for('normal.normal_history') }}">History</a>
+    </nav>
+  </div>
+
+  <div class="right">
+    <span class="user-greeting">
+      Hi, {{ session.username }}
+    </span>
+    <a href="#" class="logout-btn" id="logoutBtn">Logout</a>
+  </div>
+</header>
+
 
   <!-- Main content -->
   <main class="normal-main">
@@ -110,11 +118,17 @@
     </section>
 
     <!-- -------------------- ERROR MESSAGE -------------------- -->
-    {% if error_message %}
-      <div class="result-alert">
-        {{ error_message }}
-      </div>
-    {% endif %}
+{% if error_message %}
+<script>
+Swal.fire({
+  icon: 'error',
+  title: 'Upload Error',
+  html: '{{ error_message }}',
+  confirmButtonColor: '#6d28d9',
+  width: 500
+})
+</script>
+{% endif %}
 
      <!----------------------- LOADING MESSAGE  ----------------------->
       <div id="scanOverlay" class="scan-overlay" hidden>
@@ -126,51 +140,6 @@
     </div>
 
 
-      <!-- ---------------------- LAST SCAN ---------------------------- -->
-        {% if last_scan %}
-  <section class="lastscan-section">
-    <div class="lastscan-card">
-
-      <div class="lastscan-left">
-        <div class="lastscan-icon {{ last_scan.verdict.css }}">
-          <img
-            src="{{ url_for('static', filename=last_scan.verdict.icon) }}"
-            alt=""
-          >
-        </div>
-
-        <div class="lastscan-info">
-          <h3 class="lastscan-title">Last Scan</h3>
-
-          <p class="lastscan-file">
-            <span class="lastscan-name">{{ last_scan.file_name }}</span>
-            <span class="lastscan-dash">-</span>
-            <span class="lastscan-verdict {{ last_scan.verdict.css }}">
-              {{ last_scan.verdict.label }}
-            </span>
-          </p>
-          <p class="lastscan-time">
-            <img
-              src="{{ url_for('static', filename='img/clock.png') }}"
-              alt="Time"
-              class="lastscan-clock-icon"
-            >
-            <span>{{ last_scan.time_ago }}</span>
-          </p>
-
-        </div>
-      </div>
-
-    <a
-      class="lastscan-btn"
-      href="{{ url_for('normal.normal_history') }}"
-    >
-      View Details
-    </a>
-
-  </div>
-</section>
-{% endif %}
 
 
 
@@ -300,6 +269,53 @@
         </div>
       </section>
     {% endif %}
+
+
+          <!-- ---------------------- LAST SCAN ---------------------------- -->
+        {% if last_scan %}
+  <section class="lastscan-section">
+    <div class="lastscan-card">
+
+      <div class="lastscan-left">
+        <div class="lastscan-icon {{ last_scan.verdict.css }}">
+          <img
+            src="{{ url_for('static', filename=last_scan.verdict.icon) }}"
+            alt=""
+          >
+        </div>
+
+        <div class="lastscan-info">
+          <h3 class="lastscan-title">Last Scan</h3>
+
+          <p class="lastscan-file">
+            <span class="lastscan-name">{{ last_scan.file_name }}</span>
+            <span class="lastscan-dash">-</span>
+            <span class="lastscan-verdict {{ last_scan.verdict.css }}">
+              {{ last_scan.verdict.label }}
+            </span>
+          </p>
+          <p class="lastscan-time">
+            <img
+              src="{{ url_for('static', filename='img/clock.png') }}"
+              alt="Time"
+              class="lastscan-clock-icon"
+            >
+            <span>{{ last_scan.time_ago }}</span>
+          </p>
+
+        </div>
+      </div>
+
+    <a
+      class="lastscan-btn"
+      href="{{ url_for('normal.normal_history') }}"
+    >
+      View Details
+    </a>
+
+  </div>
+</section>
+{% endif %}
 
     <!-- -------------------- HELP SECTION: MEANINGS + TIPS -------------------- -->
 <section class="help-section">

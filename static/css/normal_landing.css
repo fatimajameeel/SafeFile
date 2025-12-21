@@ -154,7 +154,7 @@
 }
 
 /* -------------------- Error Message -------------------- */
-.result-alert {
+/* .result-alert {
   max-width: 840px;
   margin: 18px auto;
   padding: 14px 18px;
@@ -163,7 +163,7 @@
   border: 1px solid #ffcccc;
   color: #b91c1c;
   font-weight: 500;
-}
+} */
 
 /* -------------------- Results Card -------------------- */
 .result-section {
@@ -315,7 +315,6 @@
   border: none;
 }
 
-/* optional hover (no borders, just soft background) */
 .results-table tbody tr:hover td {
   background: #f9f7ff;
 }
@@ -515,7 +514,7 @@
   width: 58px;
   height: 58px;
   border-radius: 16px;
-  background: #E9FFF2;                 /* light green like figma */
+  background: #E9FFF2;               
   border: 1px solid rgba(39, 174, 96, 0.25);
   display: flex;
   align-items: center;
@@ -671,6 +670,7 @@
 .help-card{
   background: #ffffff;
   border-radius: 26px;
+  margin-top: 90px;
   padding: 22px 22px 18px;
   border: 1px solid rgba(197, 176, 255, 0.55);
   box-shadow: 0 24px 70px rgba(148, 115, 255, 0.18);

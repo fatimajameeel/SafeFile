@@ -50,3 +50,9 @@ def login():
         return redirect(url_for("soc.soc_home"))
     else:
         return redirect(url_for("auth.index"))
+
+
+@auth_bp.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("auth.index"))

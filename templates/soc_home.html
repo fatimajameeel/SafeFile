@@ -6,6 +6,8 @@
   <title>SafeFile SOC Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_home.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
 
 <script>
 
@@ -33,6 +35,9 @@
 <script src="{{ url_for('static', filename='js/verdict_distribution_pie.js') }}"></script>
 <script src="{{ url_for('static', filename='js/top_yara_bar.js') }}"></script> 
 <script src="{{ url_for('static', filename='js/daily_volume.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script  defer src="{{ url_for('static', filename='js/logout_confirm.js') }}"></script>
+
 
 
 
@@ -41,23 +46,30 @@
 </head>
 <body>
   <!-- Top Navigation Bar -->
-  <header class="topbar">
-    <div class="left">
-      <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
-      <nav class="nav-links">
-        <a href="{{ url_for('soc.soc_home') }}" class="active">Home</a>
-        <a href="{{ url_for('soc.soc_scan') }}">Scan</a>
-        <a href="{{ url_for('soc.soc_history') }}">History</a>
-        <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
-      </nav>
+<header class="topbar">
+  <div class="left">
+    <div class="logo-combo">
+      <img src="{{ url_for('static', filename='img/text-logo.png') }}"
+           alt="SafeFile logo text"
+           class="logo-text">
     </div>
 
-    <div class="right">
-      <div class="logo-combo">
-        <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
-      </div>
-    </div>
-  </header>
+    <nav class="nav-links">
+      <a href="{{ url_for('soc.soc_home') }}" class="active">Home</a>
+      <a href="{{ url_for('soc.soc_scan') }}">Scan</a>
+      <a href="{{ url_for('soc.soc_history') }}">History</a>
+      <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
+    </nav>
+  </div>
+
+  <div class="right">
+    <span class="user-greeting">
+      Hi, {{ session.username }}
+    </span>
+    <a href="#" class="logout-btn" id="logoutBtn">Logout</a>
+  </div>
+</header>
+
 
   <main class="content">
     <!-------------------- KPI Section: top overview cards-------------------->
@@ -77,8 +89,7 @@
             <div class="kpi-card-main">
               <h2 class="kpi-title">{{ card.title }}</h2>
 
-              <!-- Sub-label = time range (weekly) -->
-              <!-- <p class="kpi-subtitle">{{ kpi_stats.period_label }}</p> -->
+
 
               <!-- Big main value -->
               <p class="kpi-value">
@@ -103,9 +114,9 @@
                   <span class="kpi-trend-value">
                     {{ card.change_percent|round(1) }}%
                   </span>
-                  <span class="kpi-trend-label">
+                  <!-- <span class="kpi-trend-label">
                     {{ kpi_stats.comparison_label }}
-                  </span>
+                  </span> -->
                 {% else %}
                   <span class="kpi-trend-label no-data">
                     No previous data

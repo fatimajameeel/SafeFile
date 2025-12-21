@@ -7,30 +7,37 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_history.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script  defer src="{{ url_for('static', filename='js/logout_confirm.js') }}"></script>
 
 
 </head>
 <body>
   <!---------------- Top Navigation Bar ---------------->
-  <header class="topbar">
-    <div class="left">
-      <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
-      <nav class="nav-links">
-        <a href="{{ url_for('soc.soc_home') }}">Home</a>
-        <a href="{{ url_for('soc.soc_scan') }}">Scan</a>
-        <a href="{{ url_for('soc.soc_history') }}" class="active">History</a>
-        <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
-      </nav>
+<header class="topbar">
+  <div class="left">
+    <div class="logo-combo">
+      <img src="{{ url_for('static', filename='img/text-logo.png') }}"
+           alt="SafeFile logo text"
+           class="logo-text">
     </div>
 
-    <div class="right">
-      <div class="logo-combo">
-        <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
-      </div>
-    </div>
-  </header>
+    <nav class="nav-links">
+      <a href="{{ url_for('soc.soc_home') }}" >Home</a>
+      <a href="{{ url_for('soc.soc_scan') }}">Scan</a>
+      <a href="{{ url_for('soc.soc_history') }}" class="active">History</a>
+      <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
+    </nav>
+  </div>
 
-  <main class="content">
+  <div class="right">
+    <span class="user-greeting">
+      Hi, {{ session.username }}
+    </span>
+    <a href="#" class="logout-btn" id="logoutBtn">Logout</a>
+  </div>
+</header>
+
 
     <!------------------ History Card -------------->
     <section class="history-card">
