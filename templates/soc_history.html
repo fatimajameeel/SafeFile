@@ -83,6 +83,7 @@
               <th>Date</th>
               <th>Verdict</th>
               <th>Uploaded By</th>
+              <th style="width:140px;">Download</th>
             </tr>
           </thead>
           <tbody>
@@ -105,11 +106,23 @@
                       </span>
                     </td>
                   <td>{{ row["uploaded_by"] }}</td>
+                  <td class="download-cell">
+                    <a
+                      href="{{ url_for('soc.download_file_analysis_json', file_id=row['file_id']) }}"
+                      class="download-icon-btn"
+                      title="Download analysis report (JSON)">
+                      
+                      <img
+                        src="{{ url_for('static', filename='img/downloads.png') }}"
+                        alt="Download JSON"
+                        class="download-icon">
+                    </a>
+                  </td>
                 </tr>
               {% endfor %}
             {% else %}
               <tr>
-                <td colspan="4" class="history-empty">
+                <td colspan="5" class="history-empty">
                   No scan records match your filters yet.
                 </td>
               </tr>

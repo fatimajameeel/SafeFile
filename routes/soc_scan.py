@@ -323,7 +323,7 @@ def soc_scan():
             pe_flags = pe_interp.get("flags") or []
             pe_risk = pe_interp.get("risk_score")
 
-        # Example simple rules – you can tweak thresholds if you want
+        # Example simple rules
         if overall_entropy is not None and overall_entropy >= 7.3:
             log_event(
                 user_id=user_id,

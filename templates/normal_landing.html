@@ -145,7 +145,7 @@ Swal.fire({
 
     <!-- -------------------- SINGLE FILE RESULT (TABLE) -------------------- -->
     {% if scan_mode == "file" and single_result %}
-      <section class="result-section">
+      <section class="result-section" id="scanResults">
         <div class="result-card">
           <h2 class="result-heading">Scan Result</h2>
 
@@ -191,7 +191,7 @@ Swal.fire({
 
     <!-- -------------------- FOLDER RESULT (SUMMARY + TABLE) -------------------- -->
     {% if scan_mode == "folder" and folder_summary %}
-      <section class="result-section">
+      <section class="result-section" id="scanResults">
         <div class="result-card">
 
           <h2 class="result-heading">Folder Scan Results</h2>

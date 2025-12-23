@@ -221,3 +221,35 @@
   font-size: 0.8rem;
   color: #6b7280;
 }
+
+/* -----------------------------
+   Download icon button 
+--------------------------------*/
+
+.download-cell {
+  text-align: center;
+}
+
+.download-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.download-icon-btn:hover {
+  background-color: rgba(109, 40, 217, 0.12); /* soft purple hover */
+  transform: scale(1.05);
+}
+
+/* Icon itself */
+.download-icon {
+  width: 20px;
+  height: 20px;
+
+  /* Make the icon purple */
+  filter: invert(21%) sepia(85%) saturate(2846%) hue-rotate(252deg)
+          brightness(90%) contrast(95%);
+}

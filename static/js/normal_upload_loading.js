@@ -65,3 +65,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// ---------------------------------------------------------
+// Auto-scroll to results after the page reloads with results
+// ---------------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const results = document.getElementById("scanResults");
+  if (!results) return; // no results on this page load
+
+  // Smooth scroll so the user immediately sees the output
+  results.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+
+});

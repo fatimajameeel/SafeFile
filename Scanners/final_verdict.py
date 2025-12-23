@@ -21,7 +21,7 @@ VERDICT_THRESHOLDS = {
 
 
 def _clamp_score(value: float, minimum: int = 0, maximum: int = 100) -> int:
-    """Clamp a floating-point score into an integer 0–100."""
+    """Clamp a floating-point score into an integer 0-100."""
     try:
         v = float(value)
     except (TypeError, ValueError):
@@ -218,7 +218,7 @@ def score_ml(ml_info: Optional[Dict[str, Any]]) -> Tuple[int, List[str]]:
 
     score = _clamp_score(float(prob) * 100.0)
 
-    if verdict == "malware":
+    if verdict == "malicious":
         flags.append("ML_MALICIOUS")
 
     return score, list(set(flags))
