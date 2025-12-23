@@ -20,7 +20,7 @@ def read_file_header(file_path, n=32):
     with open(file_path, "rb") as f:
         return f.read(n)
 
-    # Match header bytes agaisnt the custom signature list
+# Match header bytes agaisnt the custom signature list
 
 
 def detect_from_magic_numbers(header):

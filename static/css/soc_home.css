@@ -20,11 +20,13 @@
   font-size: 24px;
   font-weight: 700;
   color: #2b0f80; 
+  font-family: "Orbitron", system-ui, -apple-system, "Segoe UI", sans-serif;
+
 }
 
 .kpi-period {
   margin: 40px 0 0 0;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   color: #8987b6;
 }
@@ -73,6 +75,7 @@
   font-size: 20px;
   font-weight: 700;
   color:#2b0f80;
+  
 }
 
 /* Subtitle (time range) */
@@ -121,6 +124,7 @@
 /* Percent value text */
 .kpi-trend-value {
   font-weight: 600;
+  font-size: 14px;
 }
 
 /* When there's no previous data */
@@ -280,6 +284,8 @@
   font-size: 20px;
   font-weight: 700;
   color: #2b0f80;
+    font-family: "Orbitron", system-ui, -apple-system, "Segoe UI", sans-serif;
+
 }
 
 .chart-subtitle {

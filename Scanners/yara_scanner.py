@@ -76,7 +76,7 @@ def scan_file_with_yara(file_path: str) -> dict:
             "error": None,
             "matches": []
         }
-
+    # YARA ruleset is applied to each uploaded file
     try:
         matches = rules.match(filepath=file_path)
     except Exception as e:
@@ -93,7 +93,7 @@ def scan_file_with_yara(file_path: str) -> dict:
         result_matches.append(
             {
                 "rule": m.rule,               # rule name
-                "namespace": m.namespace,     # e.g. the filename group
+                "namespace": m.namespace,     # the filename group
                 "tags": list(m.tags),         # any tags defined in the rule
                 # meta fields like description, author, score, ...
                 "meta": dict(m.meta),

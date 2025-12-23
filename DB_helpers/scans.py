@@ -34,6 +34,8 @@ def save_file_result(
     - file_name: original name of the uploaded file
     - analysis_result: dict returned by analyze_file()
     """
+    analysis_json = json.dumps(analysis_result, ensure_ascii=False)
+
     db = get_db()
     cursor = db.cursor()
 
@@ -145,9 +147,10 @@ def save_file_result(
             malware_type,
             is_pe,
             vt_malicious_count,
-            vt_total_engines
+            vt_total_engines,
+            analysis_json
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             scan_id,
@@ -164,6 +167,7 @@ def save_file_result(
             is_pe,
             vt_malicious_count,
             vt_total_engines,
+            analysis_json
         )
     )
 

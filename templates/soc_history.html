@@ -6,29 +6,38 @@
   <title>SafeFile SOC Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_history.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script  defer src="{{ url_for('static', filename='js/logout_confirm.js') }}"></script>
+
 
 </head>
 <body>
   <!---------------- Top Navigation Bar ---------------->
-  <header class="topbar">
-    <div class="left">
-      <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
-      <nav class="nav-links">
-        <a href="{{ url_for('soc.soc_home') }}">Home</a>
-        <a href="{{ url_for('soc.soc_scan') }}">Scan</a>
-        <a href="{{ url_for('soc.soc_history') }}" class="active">History</a>
-        <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
-      </nav>
+<header class="topbar">
+  <div class="left">
+    <div class="logo-combo">
+      <img src="{{ url_for('static', filename='img/text-logo.png') }}"
+           alt="SafeFile logo text"
+           class="logo-text">
     </div>
 
-    <div class="right">
-      <div class="logo-combo">
-        <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
-      </div>
-    </div>
-  </header>
+    <nav class="nav-links">
+      <a href="{{ url_for('soc.soc_home') }}" >Home</a>
+      <a href="{{ url_for('soc.soc_scan') }}">Scan</a>
+      <a href="{{ url_for('soc.soc_history') }}" class="active">History</a>
+      <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
+    </nav>
+  </div>
 
-  <main class="content">
+  <div class="right">
+    <span class="user-greeting">
+      Hi, {{ session.username }}
+    </span>
+    <a href="#" class="logout-btn" id="logoutBtn">Logout</a>
+  </div>
+</header>
+
 
     <!------------------ History Card -------------->
     <section class="history-card">
@@ -42,6 +51,7 @@
         <div class="history-search">
           <input
             type="text"
+            id="historySearch"
             name="q"
             value="{{ q }}"
             placeholder="Search by file name or uploader..."
@@ -51,13 +61,16 @@
 
         <!-- Verdict dropdown -->
         <div class="history-verdict-filter">
-          <select name="verdict" class="history-verdict-select">
+          <select
+            name="verdict"
+            class="history-verdict-select"
+            onchange="this.form.submit()"
+          >
             <option value="all" {% if verdict_filter == 'all' %}selected{% endif %}>All verdicts</option>
             <option value="benign" {% if verdict_filter == 'benign' %}selected{% endif %}>Benign</option>
             <option value="suspicious" {% if verdict_filter == 'suspicious' %}selected{% endif %}>Suspicious</option>
             <option value="malicious" {% if verdict_filter == 'malicious' %}selected{% endif %}>Malicious</option>
           </select>
-
         </div>
       </form>
 
@@ -70,6 +83,7 @@
               <th>Date</th>
               <th>Verdict</th>
               <th>Uploaded By</th>
+              <th style="width:140px;">Download</th>
             </tr>
           </thead>
           <tbody>
@@ -92,11 +106,23 @@
                       </span>
                     </td>
                   <td>{{ row["uploaded_by"] }}</td>
+                  <td class="download-cell">
+                    <a
+                      href="{{ url_for('soc.download_file_analysis_json', file_id=row['file_id']) }}"
+                      class="download-icon-btn"
+                      title="Download analysis report (JSON)">
+                      
+                      <img
+                        src="{{ url_for('static', filename='img/downloads.png') }}"
+                        alt="Download JSON"
+                        class="download-icon">
+                    </a>
+                  </td>
                 </tr>
               {% endfor %}
             {% else %}
               <tr>
-                <td colspan="4" class="history-empty">
+                <td colspan="5" class="history-empty">
                   No scan records match your filters yet.
                 </td>
               </tr>
@@ -112,5 +138,20 @@
     </section>
 
   </main>
+  <script>
+  (function () {
+    const input = document.getElementById("historySearch");
+    if (!input) return;
+
+    let timer;
+    input.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        input.form.submit();
+      }, 500); // submit after user stops typing
+    });
+  })();
+</script>
+
 </body>
 </html>

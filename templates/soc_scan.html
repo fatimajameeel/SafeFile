@@ -7,35 +7,47 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/soc_scan.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script  defer src="{{ url_for('static', filename='js/logout_confirm.js') }}"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <script defer src="{{ url_for('static', filename='js/soc_remove_file.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/soc_note_ajax.js') }}"></script>
+
+
 
 
 </head>
 <body>
   <!-- Top Navigation Bar -->
-  <header class="topbar">
-    <div class="left">
-      <a href="{{ url_for('auth.index') }}" class="back-arrow">←</a>
-      <nav class="nav-links">
-        <a href="{{ url_for('soc.soc_home') }}">Home</a>
-        <a href="{{ url_for('soc.soc_scan') }}" class="active">Scan</a>
-        <a href="{{ url_for('soc.soc_history') }}">History</a>
-        <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
-      </nav>
+<header class="topbar">
+  <div class="left">
+    <div class="logo-combo">
+      <img src="{{ url_for('static', filename='img/text-logo.png') }}"
+           alt="SafeFile logo text"
+           class="logo-text">
     </div>
 
-       <div class="Logo">
-        <div class="logo-combo">
+    <nav class="nav-links">
+      <a href="{{ url_for('soc.soc_home') }}" >Home</a>
+      <a href="{{ url_for('soc.soc_scan') }}" class="active">Scan</a>
+      <a href="{{ url_for('soc.soc_history') }}">History</a>
+      <a href="{{ url_for('soc.soc_logs') }}">Logs</a>
+    </nav>
+  </div>
 
-             <img src="{{ url_for('static', filename='img/text-logo.png') }}" alt="SafeFile logo text" class="logo-text">
-         </div>
-        </div>
-  </header>
+  <div class="right">
+    <span class="user-greeting">
+      Hi, {{ session.username }}
+    </span>
+    <a href="#" class="logout-btn" id="logoutBtn">Logout</a>
+  </div>
+</header>
+
 
 <main class="content scan-page">
   
 
 <div class="upload-container">
-  <h2>Upload Files for Scanning</h2>
+  <h2 >Upload Files for Scanning</h2>
 <div class="upload-actions">
 
         <!-- FILE UPLOAD BUTTON -->
@@ -64,43 +76,42 @@
       </div>
     </div>
 
-    <!-- FILE MESSAGE -->
-    {% if file_message %}
-      <div class="result-message">
-        {{ file_message }}
-      </div>
-    {% endif %}
-
-
-
 
         {% if uploaded_files and not analysis_results %}
       <div class="folder-results">
         <h3>Files to Scan</h3>
 
-        <table>
+        <table id="filesTable">
           <tr>
             <th>File Name</th>
+            <th style="width:120px;">Action</th>
           </tr>
+
           {% for f in uploaded_files %}
-          <tr>
-            <td>{{ f.display_name }}</td>
+          <tr class="file-row">
+            <td class="file-name-cell">{{ f.display_name }}</td>
+            <td>
+              <button type="button" class="remove-btn">Remove</button>
+            </td>
           </tr>
           {% endfor %}
         </table>
 
+
         <!-- Scan button form -->
-        <form method="POST" class="scan-form">
+        <form method="POST" class="scan-form" id="scanForm">
           {# send saved filenames back to the server #}
           {% for f in uploaded_files %}
             <input type="hidden" name="files_to_scan" value="{{ f.saved_name }}">
           {% endfor %}
+          <div class="scan-actions">
           <button type="submit"
                   name="action"
                   value="scan"
                   class="upload-btn ">
             Scan Files
           </button>
+          </div>
         </form>
       </div>
     {% endif %}
@@ -121,7 +132,7 @@
 
     {# One expandable card per file #}
     {% for r in analysis_results %}
-      <details class="file-card">
+      <details class="file-card" data-file-id="{{ r.file_id }}">
         <summary class="file-summary-row">
           <div class="file-main">
             <span class="arrow"></span>
@@ -132,7 +143,7 @@
 
           {% set verdict = r.final_verdict %}
           {% if verdict %}
-            <span class="badge badge-{{ verdict.verdict }}">
+            <span class="badge badge-{{ verdict.verdict|lower }}">
               {{ verdict.verdict|capitalize }}
             </span>
           {% else %}
@@ -613,13 +624,49 @@
 
 
 
-          <!-- 6) Analyst Notes -->
-          <div class="detail-section">
-            <h4>Analyst Notes</h4>
-            <div class="note-block">
-              (Final analyst notes and combined verdict will appear here.)
+          <!-- 6) ------------------ Analyst Notes ------------------>
+          <div class="detail-section section-card analyst-notes-card">
+            <h4 class="result-title">Analyst Notes</h4>
+
+            
+            <div class="note-display">
+              {% if r.analyst_note %}
+                <div class="note-block" style="margin-bottom: 10px;">
+                  <div class="note-text">{{ r.analyst_note }}</div>
+
+                  {% if r.analyst_note_at %}
+                    <div class="muted-text note-updated-at">
+                      Last updated: {{ r.analyst_note_at }}
+                    </div>
+                  {% else %}
+                    <div class="muted-text note-updated-at" style="display:none;"></div>
+                  {% endif %}
+                </div>
+              {% else %}
+                <p class="muted-text no-notes">No notes added yet.</p>
+
+                <!-- Keep an empty note-block ready so JS can show it -->
+                <div class="note-block" style="margin-bottom: 10px; display:none;">
+                  <div class="note-text"></div>
+                  <div class="muted-text note-updated-at" style="display:none;"></div>
+                </div>
+              {% endif %}
             </div>
+
+            <!-- This form will be intercepted by JS (AJAX) -->
+            <form class="note-form" data-file-id="{{ r.file_id }}">
+              <textarea
+                name="note_text"
+                class="note-textarea"
+                rows="4"
+                placeholder="Write your notes about this file...">{{ r.analyst_note or "" }}</textarea>
+
+              <div class="note-actions">
+                <button type="submit" class="upload-btn note-save-btn">Save Note</button>
+              </div>
+            </form>
           </div>
+
 
         </div>
       </details>
@@ -627,6 +674,14 @@
   </div>
 {% endif %}
 
+<!-- Scanning Overlay -->
+<div id="scanOverlay" class="scan-overlay" hidden>
+  <div class="scan-box">
+    <div class="spinner"></div>
+    <p class="scan-title">Scanning…</p>
+    <p class="scan-sub">This may take a few seconds.</p>
+  </div>
+</div>
 
 
 </main>
@@ -643,6 +698,7 @@ Swal.fire({
 </script>
 {% endif %}
 
+<script defer src="{{ url_for('static', filename='js/soc_scan_loading.js') }}"></script>
 
 </body>
 </html>

@@ -10,7 +10,6 @@ import routes.soc_scan
 import routes.soc_home
 import routes.soc_history
 import routes.soc_logs
-import routes.normal_scan
 import routes.normal_history
 import routes.normal_landing
 

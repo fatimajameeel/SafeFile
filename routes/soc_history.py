@@ -1,5 +1,9 @@
 # routes/soc_history.py
-from flask import render_template, request
+from flask import render_template, request, make_response, abort
+import json
+from flask import render_template, request, make_response, abort
+from werkzeug.utils import secure_filename
+import json
 from .soc_routes import soc_bp
 from db import get_db
 
@@ -73,3 +77,54 @@ def soc_history():
         total_count=total_count,
         showing_count=showing_count,
     )
+# routes/soc_history.py
+
+
+@soc_bp.route("/soc/history/file/<int:file_id>/download", methods=["GET"])
+def download_file_analysis_json(file_id: int):
+    """
+    Download a PRETTY JSON file for one scanned file.
+
+    URL example:
+      /soc/history/file/12/download
+
+    What this does:
+      - Reads analysis_json from DB for this file_id
+      - Pretty-prints it with indentation
+      - Returns it as a downloadable .json attachment
+    """
+    db = get_db()
+
+    # 1) Get the file name + analysis_json from the DB
+    row = db.execute("""
+        SELECT file_name, analysis_json
+        FROM file
+        WHERE file_id = ?
+    """, (file_id,)).fetchone()
+
+    # 2) If file_id doesn't exist (or there's no saved analysis), return 404
+    if not row:
+        abort(404, description="File not found")
+
+    raw_json = row["analysis_json"]
+    if not raw_json:
+        abort(404, description="No analysis JSON stored for this file")
+
+    # 3) Convert to pretty JSON (with new lines + indentation)
+    #    If parsing fails for any reason fallback to raw text
+    try:
+        parsed = json.loads(raw_json)
+        pretty_json = json.dumps(parsed, indent=2, ensure_ascii=False)
+    except Exception:
+        pretty_json = raw_json
+
+    # 4) Create a safe download filename
+    base_name = row["file_name"] or f"file_{file_id}"
+    safe_base = secure_filename(base_name) or f"file_{file_id}"
+    download_name = f"{safe_base}_analysis.json"
+
+    # 5) Return as a downloadable file (attachment)
+    resp = make_response(pretty_json)
+    resp.headers["Content-Type"] = "application/json; charset=utf-8"
+    resp.headers["Content-Disposition"] = f'attachment; filename="{download_name}"'
+    return resp
