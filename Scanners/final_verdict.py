@@ -44,7 +44,7 @@ def _safe_int(value: Any, default: int = 0) -> int:
 
 def score_file_type(file_type_info: Optional[Dict[str, Any]]) -> Tuple[int, List[str]]:
     """
-    Turn the raw file-type detection result into a 0–100 risk score.
+    Turn the raw file-type detection result into a 0-100 risk score.
     file_type_info is expected to be the dict returned by detect_file_type().
     """
     if not file_type_info:
@@ -366,5 +366,5 @@ def compute_final_verdict(
         "confidence": confidence,
         "component_scores": component_scores,
         "flags": list(set(all_flags)),
-        # no "reasons" key anymore
+
     }

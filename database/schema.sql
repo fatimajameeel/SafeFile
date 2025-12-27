@@ -41,20 +41,27 @@ CREATE TABLE scan (
 -- FILE TABLE
 --------------------------------------------------
 CREATE TABLE file (
-    file_id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    scan_id           INTEGER NOT NULL,
-    file_name         TEXT NOT NULL,
-    timestamp         DATETIME DEFAULT CURRENT_TIMESTAMP,
-    file_type_detected TEXT,
-    entropy_value     REAL,
-    yara_hits         TEXT,              -- could be JSON string
-    file_hash         TEXT,
-    vt_report_json    TEXT,
-    ml_verdict        TEXT,
-    final_verdict     TEXT,
+    file_id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    scan_id             INTEGER NOT NULL,
+    file_name           TEXT NOT NULL,
+    file_size           INTEGER,
+    timestamp           DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    -- Detection & analysis
+    file_type_detected  TEXT,
+    entropy_value       REAL,
+    yara_hits           TEXT,             -- matched YARA rule names
+    file_hash           TEXT,             -- SHA-256
+    vt_report_json      TEXT,             -- raw VirusTotal response
+    ml_verdict          TEXT,             -- model output
+    final_verdict       TEXT,             -- Safe / Suspicious / Malicious
+
+    -- SOC interaction
+    analyst_note        TEXT,
+    analyst_note_at     DATETIME,
+
     FOREIGN KEY (scan_id) REFERENCES scan(scan_id)
 );
-
 --------------------------------------------------
 -- SYSTEM_LOG TABLE
 --------------------------------------------------

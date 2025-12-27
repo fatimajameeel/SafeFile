@@ -89,11 +89,16 @@
 
           {% for f in uploaded_files %}
           <tr class="file-row">
-            <td class="file-name-cell">{{ f.display_name }}</td>
-            <td>
-              <button type="button" class="remove-btn">Remove</button>
-            </td>
+              <td class="file-name-cell">{{ f.display_name }}</td>
+              <td>
+                  <button type="button" 
+                          class="remove-btn" 
+                          data-saved-name="{{ f.saved_name }}">
+                      Remove
+                  </button>
+              </td>
           </tr>
+          <input type="hidden" name="files_to_scan" value="{{ f.saved_name }}">
           {% endfor %}
         </table>
 
@@ -190,12 +195,23 @@
 <h5 class="result-label" style="margin-top: 1rem;">Per-engine scores</h5>
 
 <ul class="kv-list">
-  {% for engine, score in verdict.component_scores.items() %}
-    <li>
-      <span class="result-label">{{ engine|replace("_", " ")|title }}</span>
-      <span class="result-value">{{ score|round(0) }}/100</span>
-    </li>
-  {% endfor %}
+{% for engine, score in verdict.component_scores.items() %}
+  <li>
+    <span class="result-label">
+      {% if engine == "ml" %}
+        Machine Learning
+      {% elif engine == "virustotal" %}
+        VirusTotal
+      {% elif engine == "file_type" %}
+        File Type
+      {% else %}
+        {{ engine|replace("_", " ")|title }}
+      {% endif %}
+    </span>
+    <span class="result-value">{{ score|round(0) }}/100</span>
+  </li>
+{% endfor %}
+
 </ul>
 
 

@@ -575,3 +575,32 @@ def soc_scan():
         analysis_results=analysis_results,
         uploaded_files=uploaded_files,
     )
+
+
+@soc_bp.route("/soc/delete_file", methods=["POST"])
+def delete_file():
+    """
+    Deletes a specific file from the uploads folder when the user clicks 'Remove'.
+    """
+    # 1. Get the filename from the JavaScript request
+    filename = request.form.get("filename")
+
+    if not filename:
+        return jsonify({"status": "error", "message": "No filename provided"}), 400
+
+    # 2. Secure the filename and build the path
+    safe_name = secure_filename(filename)
+    upload_folder = current_app.config.get("UPLOAD_FOLDER")
+    file_path = os.path.join(upload_folder, safe_name)
+
+    try:
+        # 3. Check if file exists and delete it
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            return jsonify({"status": "success", "message": f"Deleted {safe_name}"})
+        else:
+            # If it's already gone, we return success so the UI cleans itself up
+            return jsonify({"status": "success", "message": "File not found (already deleted?)"})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
