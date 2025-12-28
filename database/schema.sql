@@ -1,4 +1,4 @@
--- Drop tables if they exist (useful when re-initializing during development)
+-- Drop tables if they exist (useful during development)
 DROP TABLE IF EXISTS system_log;
 DROP TABLE IF EXISTS file;
 DROP TABLE IF EXISTS scan;
@@ -30,50 +30,60 @@ CREATE TABLE user (
 -- SCAN TABLE
 --------------------------------------------------
 CREATE TABLE scan (
-    scan_id   INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id   INTEGER NOT NULL,
-    scan_type TEXT NOT NULL,             -- e.g. 'single_file', 'folder'
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    scan_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id    INTEGER NOT NULL,
+    scan_type  TEXT NOT NULL,                -- single_file / folder
+    timestamp  DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 --------------------------------------------------
--- FILE TABLE
+-- FILE TABLE (FULLY MATCHES ERD)
 --------------------------------------------------
 CREATE TABLE file (
-    file_id             INTEGER PRIMARY KEY AUTOINCREMENT,
-    scan_id             INTEGER NOT NULL,
-    file_name           TEXT NOT NULL,
-    file_size           INTEGER,
-    timestamp           DATETIME DEFAULT CURRENT_TIMESTAMP,
+    file_id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    scan_id              INTEGER NOT NULL,
+    file_name            TEXT NOT NULL,
+    file_size            INTEGER,
+    timestamp            DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-    -- Detection & analysis
-    file_type_detected  TEXT,
-    entropy_value       REAL,
-    yara_hits           TEXT,             -- matched YARA rule names
-    file_hash           TEXT,             -- SHA-256
-    vt_report_json      TEXT,             -- raw VirusTotal response
-    ml_verdict          TEXT,             -- model output
-    final_verdict       TEXT,             -- Safe / Suspicious / Malicious
+    -- Detection & analysis results
+    file_type_detected   TEXT,
+    entropy_value        REAL,
+    yara_hits            TEXT,
+    file_hash            TEXT,
+    vt_report_json       TEXT,
+    vt_malicious_count   INTEGER,
+    vt_total_engines     INTEGER,
 
-    -- SOC interaction
-    analyst_note        TEXT,
-    analyst_note_at     DATETIME,
+    ml_verdict           TEXT,
+    final_verdict        TEXT,
+    risk_score           REAL,
+    malware_type         TEXT,
+    is_pe                INTEGER,            -- 0 = false, 1 = true
+
+    -- Analyst interaction
+    analyst_note         TEXT,
+    analyst_note_at      DATETIME,
+
+    -- Full structured analysis snapshot
+    analysis_json        TEXT,
 
     FOREIGN KEY (scan_id) REFERENCES scan(scan_id)
 );
+
 --------------------------------------------------
--- SYSTEM_LOG TABLE
+-- SYSTEM LOG TABLE
 --------------------------------------------------
 CREATE TABLE system_log (
-    log_id      INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id     INTEGER,                 -- nullable
-    scan_id     INTEGER,                 -- nullable
-    file_id     INTEGER,                 -- nullable
-    event_type  TEXT NOT NULL,
-    event_detail TEXT,
-    severity    TEXT,                    -- e.g. INFO, WARNING, ERROR
-    timestamp   DATETIME DEFAULT CURRENT_TIMESTAMP,
+    log_id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id       INTEGER,
+    scan_id       INTEGER,
+    file_id       INTEGER,
+    event_type    TEXT NOT NULL,
+    event_detail  TEXT,
+    severity      TEXT,                      -- INFO / WARNING / ERROR
+    timestamp     DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(user_id),
     FOREIGN KEY (scan_id) REFERENCES scan(scan_id),
     FOREIGN KEY (file_id) REFERENCES file(file_id)

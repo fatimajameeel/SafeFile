@@ -326,7 +326,7 @@
 /* Chart body container controls the height */
 .chart-body {
   margin-top: 8px;
-  height: 210px;                  /* adjust this to make chart taller/shorter */
+  height: 210px;                  /* make chart taller/shorter */
 }
 
 /* Make the canvas fill the card body */
@@ -383,7 +383,7 @@
 /* YARA chart width + height */
 .yara-card .chart-body {
   height: 260px;
-  max-width: 600px;   /* let it be wider */
+  max-width: 600px;   /* letss it be wider */
   margin: 0 auto;
 }
 
@@ -403,9 +403,7 @@
 }
 
 
-/* .filetype-card {
-  flex: 0.8;    
-} */
+
 
 /* Daily Upload Volume horizontal bar height */
 .volume-card .volume-body {

@@ -34,6 +34,8 @@ def analyze_pe_entropy(file_path: str) -> dict:
         "file_name": os.path.basename(file_path),
     }
 
+    pe = None
+
     # 1) Try to parse the file as a PE
     try:
         pe = pefile.PE(file_path)
@@ -87,5 +89,9 @@ def analyze_pe_entropy(file_path: str) -> dict:
                 "entropy": section_entropy,
             }
         )
+
+    # IMPORTANT: explicitly close the PE file to avoid Windows file locks
+    if pe is not None:
+        pe.close()
 
     return result

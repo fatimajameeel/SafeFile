@@ -231,7 +231,7 @@
 }
 
 
-/* key-value list with tight spacing */
+/* key-value list */
 .kv-list {
   list-style: none;
   padding: 0;
@@ -510,7 +510,7 @@
   border-bottom: 1px solid #f3f4f6;
 }
 
-/* Notes table gets a little extra top margin */
+/* Notes table  a little extra top margin */
 .entropy-notes-table {
   margin-top: 10px;
 }

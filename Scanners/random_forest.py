@@ -173,7 +173,6 @@ def main():
     y_proba = final_rf.predict_proba(X_val_sel)[:, 1]
 
     # Start with a standard threshold 0.5 for evaluation.
-    # In the app, you'll still use the 3 bands (benign/suspicious/malicious).
     threshold = 0.5
     y_pred = (y_proba >= threshold).astype(int)
 
@@ -204,7 +203,7 @@ def main():
         )
     )
 
-    # Optional: see how many samples fall into benign/suspicious/malicious bands
+    # see how many samples fall into benign/suspicious/malicious bands
     bands = {"benign": 0, "suspicious": 0, "malicious": 0}
     for p in y_proba:
         bands[interpret_ml_probability(float(p))] += 1

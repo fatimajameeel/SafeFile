@@ -25,7 +25,7 @@ for role in roles:
 
 
 # Create hashed passwords
-password1 = generate_password_hash("password123")
+password1 = generate_password_hash("normalpassword")
 password2 = generate_password_hash("socpassword")
 
 users = [

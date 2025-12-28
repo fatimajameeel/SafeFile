@@ -1,6 +1,5 @@
 /* ======================================================================
-   Normal Landing Page (Normal User) - Clean CSS
-   Matches: normal_landing.html
+   Normal Landing Page (Normal User) 
    ====================================================================== */
 
 /* -------------------- Page Base -------------------- */
@@ -153,17 +152,7 @@
   stroke: #ffffff;
 }
 
-/* -------------------- Error Message -------------------- */
-/* .result-alert {
-  max-width: 840px;
-  margin: 18px auto;
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: #fff1f1;
-  border: 1px solid #ffcccc;
-  color: #b91c1c;
-  font-weight: 500;
-} */
+
 
 /* -------------------- Results Card -------------------- */
 .result-section {
@@ -180,7 +169,7 @@
   width: 100%;
   box-shadow: 0 24px 70px rgba(148, 115, 255, 0.18);
   border: 1px solid rgba(197, 176, 255, 0.55);
-  overflow: hidden; /* important so the header gradient corners look clean */
+  overflow: hidden; 
 }
 
 .result-heading {
@@ -275,7 +264,7 @@
   overflow-x: auto;
 }
 
-/* KEY: gradient should be continuous -> apply to thead row, not each th */
+/* KEY: gradient should be continuous  */
 .results-table {
   width: 100%;
   border-collapse: separate;

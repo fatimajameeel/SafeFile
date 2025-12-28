@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       plugins: {
         legend: {
-          display: false, // we don't need a legend; title already explains it
+          display: false, 
         },
         tooltip: {
           callbacks: {
